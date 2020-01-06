@@ -1,0 +1,39 @@
+POST http://localhost:3000/user/login
+content-type: application/json
+{
+"email":"morseck00@gmail.com",
+"password":"eleves00",
+}
+###
+
+POST https://localhost:3000/user/login HTTP/1.1
+content-type: application/json
+{
+    "email":"morseck00@gmail.com",
+    "password":"eleves00",
+}
+####
+
+GET http://localhost:3000/user/users
+
+###
+
+
+
+###
+
+POST http://localhost:3000/user/inscrire
+Content-Type: application/json
+{
+"prenom":"YUIOIP",
+"nom":"NDIAYE",
+"adresse":"Keu UHKJFgjf",
+"dateNaissance":"01-01-1990",
+"email":"labithkvf@gmail.com",
+"password":"123456789"
+}
+
+###
+
+#supprimer un user
+DELETE http://localhost:3000/user/delete/5e0f2deec262b94af755220a
