@@ -2,9 +2,3 @@
 DatabaseName: ProtoBox
 #port du server
 PORT: 3000
-
-entity:
-  prenom:
-      type: String,
-      required: true',
-      trim: true
