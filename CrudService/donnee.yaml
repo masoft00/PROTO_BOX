@@ -1,0 +1,22 @@
+--- # crud
+     
+        { 
+
+            prenom:{
+                type: 'String',
+                required: true,
+            },
+            nom:{
+                type: 'String',
+                required: false,
+            },
+            adresse:{
+                type: 'String',
+                required: false,
+            },
+            telephone:{
+                type: 'Number',
+                required: true,
+                unique: true,
+            }
+        }
