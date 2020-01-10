@@ -1,0 +1,10 @@
+GET http://localhost:3000/registrations
+
+###
+POST http://localhost:3000/registrations
+Content-Type: application/json
+ 
+{
+    "email" : "papeMbodj@gmail.com",
+    "password" : "pape"
+}

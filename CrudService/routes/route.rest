@@ -1,0 +1,31 @@
+GET http://localhost:3000/cruds
+
+###
+POST http://localhost:3000/cruds
+Content-Type: application/json
+ 
+{
+    "prenom" : "Nafi",
+    "nom" : "Dia",
+    "adresse": "ganz",
+    "telephone": 764598762
+}
+
+###
+
+GET http://localhost:3000/cruds/5e17216a27c5b2711822fbfb
+
+###
+DELETE  http://localhost:3000/cruds/5e184338a1a9d7321fd5655b
+
+###
+
+PATCH  http://localhost:3000/cruds/5e173a19e8d2d3189a1db5fb
+Content-Type: application/json
+ 
+{
+    "prenom": "astou",
+    "nom" : "Sow",
+    "adresse" : "Fouta",
+    "telephone" : 772565600
+}
