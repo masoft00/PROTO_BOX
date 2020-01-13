@@ -3,7 +3,6 @@ const validator = require('validator')
 
 
 const email = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
     message: {
         type: String,
         required: true,
@@ -27,6 +26,7 @@ const email = mongoose.Schema({
         type: String,
         required: true,
     },
+
 });
 
 module.exports = mongoose.model('Email', email);
