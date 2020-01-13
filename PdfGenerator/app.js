@@ -10,10 +10,10 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 
 //body parser middle ware
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Index Route
-app.get('/', (req, res)=>{
+app.get('/', (req, res) => {
     //res.send('Hello World');
     res.sendfile('index.html');
 });
@@ -22,9 +22,6 @@ const pdfRoute = require('./routes/pdfmake');
 app.use('/pdfMake', pdfRoute);
 
 
-
-
-app.listen(port, () =>{
+app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
 });
-
