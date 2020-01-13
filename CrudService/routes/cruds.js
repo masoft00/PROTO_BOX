@@ -59,7 +59,7 @@ router.patch('/:id',getLine, async(req, res,err) =>{
         res.crud.data.telephone = req.body.telephone
     }
       try {
-        const updated = await (res.crud).data.save()
+        const updated = await res.crud.save()
         res.json(updated)
         console.log(updated);
       } catch {
