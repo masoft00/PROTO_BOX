@@ -1,215 +1,263 @@
 #!/usr/bin/env node
 
-//importation des modules à utiliser
-const chalk    = require('chalk')
-const clear    = require('clear')
-const inquirer = require('inquirer')
-const figlet   = require('figlet')
-const shell    = require('shelljs')
-const fs       = require('fs')
+const program = require('commander');
+const chalk = require('chalk');
+const clear = require('clear');
+const figlet = require('figlet');
+const inquirer  = require('../lib/inquirer');
+const fs = require('fs');
+const { spawn } = require("child_process");
+const { exec } = require("child_process");
 
-//Afficher du nom du Programme
-clear ()
+
+clear();
+
 console.log(
-  chalk.yellow(
-    figlet.textSync('PROTO-BOX',{ horizontalLayout: 'fitted'})
+  chalk.hex('#009793')(
+    figlet.textSync('Proto-Box', { horizontalLayout: 'full' })
   )
-)
-console.log(
-  chalk.yellow('                                                             by ILAB')
-)
+);
 
 console.log(
-  chalk.green('Bienvenue dans la CLI de Proto-Box')
+  chalk.hex('#FF5733')('                                                      Innovation Lab')
 )
 
-//Questions
-const initquestions=[
-  {
-    type   : 'list',
-    name   : 'action',
-    message: chalk.yellow('Veuillez faire un choix'),
-    choices: ['Backup','Restore'],
-    default: 'Backup',
-  }
-]; 
-//backup questions
-const backupQuestions=[
-  {
-    type   : 'input',
-    name   : 'host',
-    message: 'Hostname',
-    default: 'localhost',
-  },
-  {
-    type   : 'input',
-    name   : 'port',
-    message: 'Port',
-    default: '27017',
-  },
-  {
-    type    : 'input',
-    name    : 'database',
-    message : 'Database name',
-    validate: (input) => {
-      return new Promise((resolve, reject)=>{
-        if(!input.length){
-          reject('Veuillez mettre le nom de la base de données')
-        }
-        resolve(true)
-      })
-    }
-  },
-  {
-    type    : 'input',
-    name    : 'collection',
-    message : 'Collection name',
-    validate: (input) => {
-      return new Promise((resolve, reject)=>{
-        if(!input.length){
-          reject('Veuillez mettre le nom de la Collection')
-        }
-        resolve(true)
-      })
-    }
-  },
+const start = async () => {
+  const name = await inquirer.projectInformations();
+  console.log(name);
+  fs.mkdirSync(name.projectName);
+  const projet=name.projectName;
 
-  {
-    type   : 'input',
-    name   : 'output',
-    message: 'output directory',
-    default: `${process.cwd()}/dump`
-  },
-]
-//restore  questions
-const restoreQuestions=[
-  {
-    type   : 'input',
-    name   : 'host',
-    message: 'Hostname',
-    default: 'localhost',
-  },
-  {
-    type   : 'input',
-    name   : 'port',
-    message: 'Port',
-    default: '27017',
-  },
-  {
-    type    : 'input',
-    name    : 'database',
-    message : 'Database name',
-    validate: (input) => {
-      return new Promise((resolve, reject)=>{
-        if(!input.length){
-          reject('Veuillez mettre le nom de la base de données')
-        }
-        resolve(true)
-      })
+  exec("cd" ,{projet}  , (error, stdout, stderr) => {
+    if (error) {
+        console.log(`error: ${error.message}`);
+        return;
     }
-  },
-  {
-    type    : 'input',
-    name    : 'collection',
-    message : 'Collection name',
-    validate: (input) => {
-      return new Promise((resolve, reject)=>{
-        if(!input.length){
-          reject('Veuillez mettre le nom de la Collection')
-        }
-        resolve(true)
-      })
+    if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
     }
-  },
+    //console.log(`stdout: ${stdout}`);
+  });
+ 
+  fs.writeFile('./'+projet+'/server.js','', function(err) {
+    if(err) return console.error(err);
+  });
 
-  {
-    type   : 'input',
-    name   : 'source',
-    message: 'source directory',
-    //default: `${ process.cwd()}/dump`
-  },
-]
 
-;(async()=>{
-  this.restore = restore
-  this.backup  = backup
-
-  const BackupRestore=await inquirer.prompt(initquestions)
   
-  await this[BackupRestore.action.toLowerCase()]()
+  exec('npm init', (err, stdout) => {
+          console.log(stdout);
+          console.log('over');
+        });
+  /*const init = spawn('npm init', function (err, stdout, stderr) {
+    console.log('over');
+  });
 
-  async function restore(){
-    await setDefaultValues()
-    const { host, port, database, collection, source } = await inquirer.prompt(restoreQuestions)
+      init.stdout.on("data", data => {
+        process.stdout.write(data);
+      });
 
-    let command            = ['mongorestore']
-    host && (command       = command.concat(['-h', host]))
-    port && (command       = command.concat(['-p', port]))
-    database && (command   = command.concat(['-d', database]))
-    collection && (command = command.concat(['-c', collection]))
-    source && (command     = command.concat([source]))
+      init.stderr.on("data", data => {
+          console.log(`stderr: ${data}`);
+      });
 
-    //pour sauter une ligne
-    shell.echo('\n')
-      try {
-          await shell.exec(command.join(' '))
-          shell.echo(`${chalk.green('BYYYYYYYYYYYYYYYY')}`)
-      } catch (e) {
-        shell.echo (`${chalk.green(e)}`)
-        shell.exit(0)
+      init.on('error', (error) => {
+          console.log(`error: ${error.message}`);
+      });
+
+      init.on("close", code => {
+          console.log(`child process exited with code ${code}`);
+      });*/
+
+      /*process.stdin.on('readable', function() {
+
+        var chunk = process.stdin.read();
+    
+        if(chunk !== null) {
+            init.stdin.write(chunk);
+        }
+    });*/
+
+      /*exec("npm init"  , (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+    });*/
+
+  fs.mkdir("./"+projet+"/models", (err) => {
+    if (err) throw err;
+  });
+  fs.mkdir("./"+projet+"/routes", (err) => {
+    if (err) throw err;
+  });
+
+  for(let i = 0; i < name.fonctionnalites.length; i++) {
+    if (name.fonctionnalites[i] == 'Authentification') {
+      console.log("Yesss authentication");
+      const security = async () => {
+      const auth = await inquirer.authentification();
+      console.log(auth);
+      //let parser = JSON.stringify(auth);
+      let donnees = auth.name+":{type:  "+auth.type+",required: "+auth.required+",unique: "+auth.unique+"}"            
+      fs.writeFile('./'+projet+'/models/authentification.js', donnees, function(err) {
+        if(err) return console.error(err);
+      });
+      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/AuthentificationJWT', {cwd: './'+projet+'/routes'}, function(err, stdout, stderr) {
+        if (err) {
+          console.log(`error: ${err.message}`);
+          return;
       }
-     console.log('command', command.join(` `))
-
-  }
-
-  ;async function backup(){
-    const { host, port, database, collection, output } = await inquirer.prompt(backupQuestions)
-    let command            = ['mongodump']
-    host && (command       = command.concat(['-h', host]))
-    port && (command       = command.concat(['-p', port]))
-    database && (command   = command.concat(['-d', database]))
-    collection && (command = command.concat(['-c', collection]))
-    output && (command     = command.concat(['-o', output]))
-
-    //pour sauter une ligne
-    shell.echo('\n')
-      try {
-          await shell.exec(command.join(' '))
-          shell.echo(`${chalk.yellow('BYYYYYYYYYYYYYYYY')}`)
-      } catch (e) {
-        shell.echo (`${chalk.green(e)}`)
-        shell.exit(0)
+      if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
       }
-     // console.log('command', command.join(` `))
+      console.log(`stdout: ${stdout}`);
+      });
+      do
+        {
+          const securityRepeated = async () => {
+          const authRepeated = await inquirer.authentification();
+          console.log(auth);
+          let donneesRepeated =","+authRepeated.name+":{type:  "+authRepeated.type+",required: "+authRepeated.required+",unique: "+authRepeated.unique+"}"
+          fs.appendFile('./'+projet+'/models/authentification.js', donneesRepeated, function (err) {
+            if (err) throw err;
+          });
+          }
+          securityRepeated()
+        }
+      while(auth.addAttribute==true);
+      }
+      security()
+    }
+    if(name.fonctionnalites[i] == 'Registration'){
+      const registration = async () => {
+      const register = await inquirer.registration();
+      console.log(register);
+      let donnees = register.name+":{type:  "+register.type+",required: "+register.required+",unique: "+register.unique+"}"
+      
+      fs.writeFile('./'+projet+'/models/registration.js', donnees, function(err) {
+        if(err) return console.error(err);
+      });
+      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/RegistrationService', {cwd: './'+projet+'/routes'}, function(err, stdout, stderr) {
+        if (err) {
+          console.log(`error: ${err.message}`);
+          return;
+      }
+      if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
+      }
+      console.log(`stdout: ${stdout}`);
+      });
+      do
+      {
+        const registrationRepeated = async () => {
+        const registerRepeated = await inquirer.registration();
+        console.log(registerRepeated);
+        let donneesRepeated =","+registerRepeated.name+":{type:  "+registerRepeated.type+",required: "+registerRepeated.required+",unique: "+registerRepeated.unique+"}"
+        fs.appendFile('./'+projet+'/models/authentification.js', donneesRepeated, function (err) {
+          if (err) throw err;
+        });
+        }
+        registrationRepeated()
+      }
+      while(register.addAttribute==true);
+      }
+      registration();
+    }
+      
+    
+    if (name.fonctionnalites[i] == 'FormContact'){
+      const formContact = async () => {
+      const contactInfo = await inquirer.formContact();
+      console.log(contactInfo);
+      let donnees = contactInfo.name+":{type:  "+contactInfo.type+",required: "+contactInfo.required+",unique: "+contactInfo.unique+"}"
+      fs.writeFile('./'+projet+'/models/formContact.js', donnees, function(err) {
+        if(err) return console.error(err);
+      });
+      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/formContact', {cwd: './'+projet+'/routes'}, function(err, stdout, stderr) {
+        if (err) {
+          console.log(`error: ${err.message}`);
+          return;
+      }
+      if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
+      }
+      console.log(`stdout: ${stdout}`);
+      });
+      do
+      {
+        const formContactRepeated = async () => {
+        const contactInfoRepeated = await inquirer.formContact();
+        console.log(contactInfoRepeated);
+        let donneesRepeated =","+contactInfoRepeated.name+":{type:  "+contactInfoRepeated.type+",required: "+contactInfoRepeated.required+",unique: "+contactInfoRepeated.unique+"}"
+        fs.appendFile('./'+projet+'/models/authentification.js', donneesRepeated, function (err) {
+          if (err) throw err;
+        });
+        }
+        formContactRepeated()
+      }
+      while(contactInfo.addAttribute==true);
+      }
+      formContact();
+    }
+
+    if(name.fonctionnalites[i] == 'UploadingFile'){
+      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/UploadingFileService', {cwd: './'+projet+'/routes'}, function(err, stdout, stderr) {
+        if (err) {
+          console.log(`error: ${err.message}`);
+          return;
+      }
+      if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
+      }
+      console.log(`stdout: ${stdout}`);
+      });
+    }
+
+    /*if(name.fonctionnalites[i] == 'MailSender'){
+      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/MailSender', {cwd: './'+projet+'/routes'}, function(err, stdout, stderr) {
+        if (err) {
+          console.log(`error: ${err.message}`);
+          return;
+      }
+      if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
+      }
+      console.log(`stdout: ${stdout}`);
+      });
+    }*/
+
+
+    if(name.fonctionnalites[i] == 'PdfGenerator'){
+      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/PdfGenerator', {cwd: './'+projet+'/routes'}, function(err, stdout, stderr) {
+        if (err) {
+          console.log(`error: ${err.message}`);
+          return;
+      }
+      if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
+      }
+      console.log(`stdout: ${stdout}`);
+      });
+    }
+
+
   }
-  async function setDefaultValues(){
-    const path= [process.cwd(), '/dump']
-    const dumpFolderExists=fs.existsSync(path.join(''))
-
-    if(!dumpFolderExists){
-      return
-    }
-
-    const dumpDir =fs.readdirSync(path.join(''))
-    if(!dumpDir.length){
-      return
-    }
-    path.push(`/${dumpDir[0]}`)
-    const dbSubFolders= fs.readdirSync(path.join(''))
-   
-    if(!dbSubFolders.length){
-      return
-    }
-    const dbIndex =restoreQuestions.findIndex(question=> question.name === 'database')
-    const collectionIndex=restoreQuestions.findIndex(question=> question.name ==='collection')
-    const sourceIndex=restoreQuestions.findIndex(question=> question.name ==='source')
-
-    const collection=dbSubFolders[0].split('.')[0]
-    const db = dumpDir[0]
-    const source =`${process.cwd}/dump/${db}/${collection}.bson`
-    restoreQuestions[dbIndex]['default']=db
-    restoreQuestions[collectionIndex]['default']=collection
-    restoreQuestions[sourceIndex]['default']=source
-
   }
-})()
+
+
+start();
+
+
