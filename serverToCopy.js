@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser');
-const port = 000
+const port = 3000
 
 
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true})
