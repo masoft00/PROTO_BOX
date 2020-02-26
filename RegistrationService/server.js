@@ -18,8 +18,8 @@ app.use(bodyParser.urlencoded({
 }));
 
 const router = express.Router();
-const Mesroutes = require ('./routes/registrations')
-app.use('/registrations', Mesroutes)
+const Mesroutes = require ('./routes/defar')
+app.use('/defar', Mesroutes)
 /*app.use(app.router);
 Mesroutes.initialize(app);*/
 
