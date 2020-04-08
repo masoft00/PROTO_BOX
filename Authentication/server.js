@@ -1,7 +1,7 @@
 const express     = require('express')
 require('./db/mongoose');
 var config=require('./config/config')
-const routes = require('./routes/entite')
+const routes = require('./routes/entity')
 
 const app   = express();
 
