@@ -4,7 +4,7 @@ const jwt      = require('jsonwebtoken')
 const datas    = require('./data')
 
 //const Post      = require('./post')
-const EntiteSchema  = new mongoose.Schema(
+const UserSchema  = new mongoose.Schema(
     datas.data
   );
 
@@ -15,54 +15,54 @@ const EntiteSchema  = new mongoose.Schema(
 // })
 
 
-EntiteSchema.statics.checkValidCredentials = async (email, password) => {
-    const entite = await Entite.findOne({email})
+UserSchema.statics.checkValidCredentials = async (email, password) => {
+    const user = await User.findOne({email})
 
-    if(!entite){
+    if(!user){
         throw new Error('Unable to login 2')
     }
-    const isMatch = await bcrypt.compare(password,entite.password)
+    const isMatch = await bcrypt.compare(password,user.password)
 
     if(!isMatch){
         throw new Error('Unable to login 2')
     }
 
-    return entite
+    return user
 }
 
-EntiteSchema.methods.newAuthToken = async function(){
-    const entite  = this
-    const token =  jwt.sign({ _id: entite.id.toString()}, "thisiskey")
-    user.tokens = entite.tokens.concat({ token })
-    await entite.save()
+UserSchema.methods.newAuthToken = async function(){
+    const user  = this
+    const token =  jwt.sign({ _id: user.id.toString()}, "thisiskey")
+    user.tokens = user.tokens.concat({ token })
+    await user.save()
     return token
 }
 
-EntiteSchema.methods.toJSON = function(){
-    const entite = this
-    const entiteObj = entite.toObject()
+UserSchema.methods.toJSON = function(){
+    const user = this
+    const userObj = user.toObject()
 
-    delete entiteObj.password
-    delete entiteObj.tokens
+    delete userObj.password
+    delete userObj.tokens
 
-    return entiteObj
+    return userObj
 }
 
 //hash the plain text password before saving
-EntiteSchema.pre('save', async function(next){
-    const entite = this
-    if(entite.isModified('password')){
-        entite.password = await bcrypt.hash(entite.password, 8)
+UserSchema.pre('save', async function(next){
+    const user = this
+    if(user.isModified('password')){
+        user.password = await bcrypt.hash(user.password, 8)
     }
     next()
 })
 
-EntiteSchema.pre('remove', async function(next){
-    const entite = this
-    await Post.deleteMany({author: entite._id})
+UserSchema.pre('remove', async function(next){
+    const user = this
+    await Post.deleteMany({author: user._id})
     next()
 })
 
-const Entite = mongoose.model('Entite', EntiteSchema);
+const User = mongoose.model('User', UserSchema);
 
-module.exports = Entite;
+module.exports = User;
