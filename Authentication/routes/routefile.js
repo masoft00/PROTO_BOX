@@ -1,6 +1,6 @@
 const express      = require('express');
 const router       = new express.Router()
-const User         = require('../models/entity')
+const User         = require('../models/models')
 const {ObjectID}   = require('mongodb')
 const authenticate = require('../middleware/auth')
 //const mor =require('./propriety')
