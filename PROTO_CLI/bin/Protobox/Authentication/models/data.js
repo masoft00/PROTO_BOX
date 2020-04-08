@@ -35,4 +35,8 @@ const data={
     createdAt:{
         type: Date,
         default: Date.now
-    },
+    }undefined,
+prenom: { type: String,required: false, unique: false}
+}
+ module.exports.data=data;,
+nom: { type: String,required: false, unique: false}
