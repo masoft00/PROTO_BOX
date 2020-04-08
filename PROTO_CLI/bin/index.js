@@ -5,9 +5,7 @@ const figlet      = require('figlet')
 const clear       = require('clear')
 const fs          = require('fs')
 const exec        = require('child_process').exec
-const cliProgress = require('cli-progress')
 const Promise     = require('bluebird')
-const Spinner     = require('cli-spinner').Spinner
 var replace       = require('replace')
 
 //Function qui Affiche l'entête du nom du Programme
@@ -149,7 +147,7 @@ function creerunfichier (fichier, data) {
       creerunrepertoir(np.projectName)
 
       //-------Chargement de la fonctionnalité
-      exec('svn checkout https://github.com/morseck00/BirahimTry/trunk/Authentification',{
+      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/Authentication/',{
           cwd: './' + np.projectName
         }
       )
@@ -158,8 +156,9 @@ function creerunfichier (fichier, data) {
       const rep = ad.attributeaddname
 
       //-------bracket pour commencé le fichier yml
-      let ouverture = '{\n'
-      creerunfichier('./' +np.projectName +'/Authentification/models/' +ne.entityName +'.yml',ouverture)
+      //let ouverture = "const validator = require('validator');\n const data={\n"
+     creerunfichier('./' +np.projectName +'/Authentication/models/datas.js')
+
 
       while (rep == 'O') {
         const an  = await inquirer.prompt(attributeName)
@@ -170,36 +169,39 @@ function creerunfichier (fichier, data) {
 
         let data =an.attributename_name +': { type: ' +at.type +',required: ' +re.require +', unique: ' +au.unique +'},\n'
 
-        creerunfichier('./' +np.projectName +'/Authentification/models/' +ne.entityName +'.yml',data)
+        creerunfichier('./' +np.projectName +'/Authentication/models/datas.js',data)
 
-        var dat =an.attributename_name + ': req.body.' + an.attributename_name + ',\n'
+        // var dat =an.attributename_name + ': req.body.' + an.attributename_name + ',\n'
 
-        creerunfichier('./' +np.projectName +'/Authentification/routes/inscriptionData.yml',dat)
+        // creerunfichier('./' +np.projectName +'/Authentication/routes/inscriptionData.js',dat)
 
-        var data3 =an.attributename_name +': ' +ne.entityName +'s.' +an.attributename_name +',\n'
+        // var data3 =an.attributename_name +': ' +ne.entityName +'s.' +an.attributename_name +',\n'
 
-        creerunfichier('./' + np.projectName + '/Authentification/routes/loginData.yml',data3)
+        // creerunfichier('./' + np.projectName + '/Authentication/routes/loginData.js',data3)
 
         if (ad2.attributeaddname == 'n') {
-          let fermer = '}'
-          creerunfichier('./' +np.projectName +'/Authentification/routes/inscriptionData.yml',fermer)
+          //let fermer = '}'
+          // creerunfichier('./' +np.projectName +'/Authentication/routes/inscriptionData.js',fermer)
 
-          creerunfichier('./' + np.projectName + '/Authentification/routes/loginData.yml',fermer)
+          // creerunfichier('./' + np.projectName + '/Authentication/routes/loginData.js',fermer)
+
+         
           break
         }
       }
       //-------bracket pour fermer le fichier yml
-      let fermer = '}'
-      creerunfichier('./' +np.projectName +'/Authentification/models/' +ne.entityName +'.yml',fermer)
+     
+      let fermer = "}\n module.exports.data=data;"
+      creerunfichier('./' +np.projectName +'/Authentication/models/datas.js',fermer)
 
       replace({
-        regex      : 'entite',
+        regex      : 'user',
         replacement: ne.entityName,
         paths: [
-          './' + np.projectName + '/Authentification/routes/routefile.js',
-          './' + np.projectName + '/Authentification/exporterEntity.js',
-          './' + np.projectName + '/Authentification/models/filemodels.js',
-          './' + np.projectName + '/Authentification/server.js',
+          './' + np.projectName + '/Authentication/routes/routefile.js',
+          './' + np.projectName + '/Authentication/exporterEntity.js',
+          './' + np.projectName + '/Authentication/models/filemodels.js',
+          './' + np.projectName + '/Authentication/server.js',
         ],
         recursive: true,
         silent   : true
@@ -207,15 +209,15 @@ function creerunfichier (fichier, data) {
     }
   }
 
-  let filename = "inscriptionData.js"
-  let content  = fs.readFileSync(process.cwd() + "/" + filename).toString()
+  // let filename = "inscriptionData.js"
+  // let content  = fs.readFileSync(process.cwd() + "/" + filename).toString()
   
-  replace({
-    regex      : 'inscriptionData',
-    replacement: content,
-    paths      : ['./'+np.projectName+'/Authentification/routes/inscriptionData.yml'],
-    recursive  : true,
-    silent     : true
-  })
+  // replace({
+  //   regex      : 'inscriptionData',
+  //   replacement: content,
+  //   paths      : ['./'+np.projectName+'/Authentication/routes/inscriptionData.yml'],
+  //   recursive  : true,
+  //   silent     : true
+  // })
   
 })()
