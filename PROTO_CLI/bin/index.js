@@ -147,7 +147,7 @@ function creerunfichier (fichier, data) {
       creerunrepertoir(np.projectName)
 
       //-------Chargement de la fonctionnalité
-      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/Authentication/',{
+      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/Authentication',{
           cwd: './' + np.projectName
         }
       )
@@ -156,8 +156,9 @@ function creerunfichier (fichier, data) {
       const rep = ad.attributeaddname
 
       //-------bracket pour commencé le fichier yml
-      //let ouverture = "const validator = require('validator');\n const data={\n"
-     creerunfichier('./' +np.projectName +'/Authentication/models/data.js')
+      let ouverture = ""
+     creerunfichier('./' +np.projectName +'/Authentication/models/data.js',ouverture)
+     creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',ouverture)
 
 
       while (rep == 'O') {
@@ -167,45 +168,48 @@ function creerunfichier (fichier, data) {
         const au  = await inquirer.prompt(attributeunique)
         const ad2 = await inquirer.prompt(attributeadd)
 
-        let data =',\n'+an.attributename_name +': { type: ' +at.type +',required: ' +re.require +', unique: ' +au.unique +'}\n'
+        let datapropriety=",'"+an.attributename_name+"'"
 
-        creerunfichier('./' +np.projectName +'/Authentication/models/data.js',data)
+        let data ='\n'+an.attributename_name +': { type: ' +at.type +',required: ' +re.require +', unique: ' +au.unique +'},\n'
 
-        // var dat =an.attributename_name + ': req.body.' + an.attributename_name + ',\n'
-
-        // creerunfichier('./' +np.projectName +'/Authentication/routes/inscriptionData.js',dat)
-
-        // var data3 =an.attributename_name +': ' +ne.entityName +'s.' +an.attributename_name +',\n'
-
-        // creerunfichier('./' + np.projectName + '/Authentication/routes/loginData.js',data3)
+        creerunfichier('./' +np.projectName +'/Authentication/models/data.js',data)        
+        creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',datapropriety)        
 
         if (ad2.attributeaddname == 'n') {
-          //let fermer = '}'
-          // creerunfichier('./' +np.projectName +'/Authentication/routes/inscriptionData.js',fermer)
-
-          // creerunfichier('./' + np.projectName + '/Authentication/routes/loginData.js',fermer)
-
-          let fermer = "}\n module.exports.data=data;"
-          creerunfichier('./' +np.projectName +'/Authentication/models/data.js',fermer)
-
-          break
+          break;
         }
       }
       //-------bracket pour fermer le fichier yml
      
+      let fermerproprietes = "]}\nmodule.exports.propriety=propriety;"
+      let fermer = "}\n module.exports.data=data;"
+      creerunfichier('./' +np.projectName +'/Authentication/models/data.js',fermer)
+      creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',fermerproprietes)     
      
+
       replace({
-        regex      : ['user','User','users'],
+        regex      :'user',
         replacement: ne.entityName,
         paths: [
           './' + np.projectName + '/Authentication/routes/routefile.js',
-          './' + np.projectName + '/Authentication/exporterEntity.js',
-          './' + np.projectName + '/Authentication/models/filemodels.js',
-          './' + np.projectName + '/Authentication/server.js',
+          './' + np.projectName + '/Authentication/models/models.js',
+          './' + np.projectName + '/Authentication/middleware/auth.js',
         ],
         recursive: true,
         silent   : true
-      })
+      });
+
+      replace({
+        regex      :'User',
+        replacement: ne.entityName.charAt(0).toUpperCase() + ne.entityName.substring(1).toLowerCase(),
+        paths: [
+          './' + np.projectName + '/Authentication/routes/routefile.js',
+          './' + np.projectName + '/Authentication/models/models.js',
+          './' + np.projectName + '/Authentication/middleware/auth.js',
+        ],
+        recursive: true,
+        silent   : true
+      });
     }
   }
 
