@@ -1,5 +1,5 @@
 const jwt  = require('jsonwebtoken')
-const User = require('../models/entity')
+const Entite = require('../models/entity')
 
 const auth = async (req,res,next) => {
     try {
@@ -7,13 +7,13 @@ const auth = async (req,res,next) => {
         
         const decoded  =  jwt.verify(token, "thisiskey")
        
-        const user  = await User.findOne({ _id:decoded._id, 'tokens.token': token})
+        const entite  = await Entite.findOne({ _id:decoded._id, 'tokens.token': token})
 
-        if(!user){
+        if(!entite){
             throw new Error()
         }
         req.token = token
-        req.user = user
+        req.enetite = entite
         next()
     } catch (error) {
         console.log(error)
