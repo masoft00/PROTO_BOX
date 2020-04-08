@@ -157,7 +157,7 @@ function creerunfichier (fichier, data) {
 
       //-------bracket pour commencé le fichier yml
       //let ouverture = "const validator = require('validator');\n const data={\n"
-     creerunfichier('./' +np.projectName +'/Authentication/models/datas.js')
+     creerunfichier('./' +np.projectName +'/Authentication/models/data.js')
 
 
       while (rep == 'O') {
@@ -167,9 +167,9 @@ function creerunfichier (fichier, data) {
         const au  = await inquirer.prompt(attributeunique)
         const ad2 = await inquirer.prompt(attributeadd)
 
-        let data =an.attributename_name +': { type: ' +at.type +',required: ' +re.require +', unique: ' +au.unique +'},\n'
+        let data =+',\n'+an.attributename_name +': { type: ' +at.type +',required: ' +re.require +', unique: ' +au.unique +'}\n'
 
-        creerunfichier('./' +np.projectName +'/Authentication/models/datas.js',data)
+        creerunfichier('./' +np.projectName +'/Authentication/models/data.js',data)
 
         // var dat =an.attributename_name + ': req.body.' + an.attributename_name + ',\n'
 
@@ -185,17 +185,17 @@ function creerunfichier (fichier, data) {
 
           // creerunfichier('./' + np.projectName + '/Authentication/routes/loginData.js',fermer)
 
-         
+          let fermer = "}\n module.exports.data=data;"
+          creerunfichier('./' +np.projectName +'/Authentication/models/data.js',fermer)
+
           break
         }
       }
       //-------bracket pour fermer le fichier yml
      
-      let fermer = "}\n module.exports.data=data;"
-      creerunfichier('./' +np.projectName +'/Authentication/models/datas.js',fermer)
-
+     
       replace({
-        regex      : 'user',
+        regex      : ['user','User','users'],
         replacement: ne.entityName,
         paths: [
           './' + np.projectName + '/Authentication/routes/routefile.js',
