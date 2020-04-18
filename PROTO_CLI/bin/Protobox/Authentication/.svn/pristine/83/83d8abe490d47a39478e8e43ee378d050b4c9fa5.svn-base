@@ -3,7 +3,7 @@ const router       = new express.Router()
 const User         = require('../models/models')
 const {ObjectID}   = require('mongodb')
 const authenticate = require('../middleware/auth')
-//const mor =require('./propriety')
+const proprietes   = require('./propriety')
 
 
 //Route pour s'incrire
@@ -25,7 +25,7 @@ router.get('/users/me', authenticate ,async (req,res)=> {
 //route qui modifie l'utilisateur qui s'est connecté
 router.patch('/users/me',authenticate ,async (req,res) => {
     const updates  = Object.keys(req.body)
-    const allowedUpdates = ["name", "email", "password", "age"]
+    const allowedUpdates = proprietes.propriety.tab;
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
     const _id =  req.user._id
 

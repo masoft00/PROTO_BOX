@@ -7,8 +7,7 @@ const config = {
     //MongoDB configuration for mongo DB
     HOST: 'localhost',
     PORT: '27017',
-    DATABASE: 'Protobox'
-    
+    DATABASE: 'Protobox' 
   }
 }
 module.exports = config

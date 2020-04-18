@@ -89,7 +89,7 @@ const attributeadd = {
   type   : 'input',
   name   : 'attributeaddname',
   message: 
-    'Voullez-vous ajouter des attributs ?\nTapper Entrer ou sur n pour dire non (O/n)',
+    'Votre entité a déjà comme attribut email et password.\nVoullez-vous ajouter des attributs ?\nTapper Entrer ou sur n pour dire non (O/n)',
   default: 'O'
 }
 
@@ -149,18 +149,19 @@ function creerunfichier (fichier, data) {
       //-------Chargement de la fonctionnalité
       exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/Authentication',{
           cwd: './' + np.projectName
-        }
+      }
       )
       const ne  = await inquirer.prompt(nomEntite)
       const ad  = await inquirer.prompt(attributeadd)
       const rep = ad.attributeaddname
 
       //-------bracket pour commencé le fichier yml
+     
       let ouverture = ""
-     creerunfichier('./' +np.projectName +'/Authentication/models/data.js',ouverture)
-     creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',ouverture)
-
-
+      creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',ouverture)
+      creerunfichier('./' +np.projectName +'/Authentication/models/data.js',ouverture)
+     
+    
       while (rep == 'O') {
         const an  = await inquirer.prompt(attributeName)
         const at  = await inquirer.prompt(attributeType)
@@ -168,25 +169,28 @@ function creerunfichier (fichier, data) {
         const au  = await inquirer.prompt(attributeunique)
         const ad2 = await inquirer.prompt(attributeadd)
 
+        
         let datapropriety=",'"+an.attributename_name+"'"
-
+        creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',datapropriety)     
+       
         let data ='\n'+an.attributename_name +': { type: ' +at.type +',required: ' +re.require +', unique: ' +au.unique +'},\n'
 
         creerunfichier('./' +np.projectName +'/Authentication/models/data.js',data)        
-        creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',datapropriety)        
+        //creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',datapropriety)        
 
         if (ad2.attributeaddname == 'n') {
+          let datapropriety=""
+          creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',datapropriety)  
           break;
         }
       }
+
       //-------bracket pour fermer le fichier yml
-     
       let fermerproprietes = "]}\nmodule.exports.propriety=propriety;"
       let fermer = "}\n module.exports.data=data;"
       creerunfichier('./' +np.projectName +'/Authentication/models/data.js',fermer)
-      creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',fermerproprietes)     
-     
-
+      creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',fermerproprietes)    
+    
       replace({
         regex      :'user',
         replacement: ne.entityName,
@@ -194,6 +198,7 @@ function creerunfichier (fichier, data) {
           './' + np.projectName + '/Authentication/routes/routefile.js',
           './' + np.projectName + '/Authentication/models/models.js',
           './' + np.projectName + '/Authentication/middleware/auth.js',
+          './' + np.projectName + '/Authentication/server.js',
         ],
         recursive: true,
         silent   : true
@@ -210,18 +215,13 @@ function creerunfichier (fichier, data) {
         recursive: true,
         silent   : true
       });
+      
+      exec('npm install ',{
+          cwd: './' + np.projectName + '/Authentication'
+      });
+  
+      
     }
   }
-
-  // let filename = "inscriptionData.js"
-  // let content  = fs.readFileSync(process.cwd() + "/" + filename).toString()
-  
-  // replace({
-  //   regex      : 'inscriptionData',
-  //   replacement: content,
-  //   paths      : ['./'+np.projectName+'/Authentication/routes/inscriptionData.yml'],
-  //   recursive  : true,
-  //   silent     : true
-  // })
   
 })()
