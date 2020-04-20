@@ -85,6 +85,29 @@ const nomEntite = {
   }
 }
 
+//questions sur les propriétes
+const ProjectFront = {
+  type   : 'input',
+  name   : 'FrontName',
+  message: 'Voullez-vous générer la partie Front ?',
+  default: 'ProtoBoxFront',
+  validate: input => {
+    return new Promise((resolve, reject) => {
+      if (!input.length) {
+        reject('Voullez-vous générer la partie Front')
+      }
+      resolve(true)
+    })
+  }
+}
+
+const frontadd = {
+  type   : 'input',
+  name   : 'frontaddQ',
+  message: 
+    'Voullez-vous ajouter la partie front ?\nTapper Entrer ou sur n pour dire non (O/n)',
+  default: 'O'
+}
 const attributeadd = {
   type   : 'input',
   name   : 'attributeaddname',
@@ -219,8 +242,7 @@ function creerunfichier (fichier, data) {
       exec('npm install ',{
           cwd: './' + np.projectName + '/Authentication'
       });
-  
-      
+
     }
   }
   

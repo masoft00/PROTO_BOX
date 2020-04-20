@@ -3,7 +3,7 @@ const express    = require('express')
 require('dotenv').config()
 const router     = new express.Router()
 
-router.post('/sendMail', async (req, res) => {
+router.post('/sendmail', async (req, res) => {
   try {
     let testAccount = await nodemailer.createTestAccount()
 
@@ -22,7 +22,7 @@ router.post('/sendMail', async (req, res) => {
       from   : process.env.email, // sender address
       to     : req.body.destinataire, // list of receivers
       subject: req.body.subject, // Subject line
-      text   : req.body.text // plain text body
+      message: req.body.message // plain text body
     })
     res.status(201).send('Message envoyé')
   } catch (e) {
