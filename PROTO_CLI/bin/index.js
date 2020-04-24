@@ -102,6 +102,7 @@ const ProjectFront = {
   }
 }
 
+//Question pour voir si l'utilisateur a besion de= front
 const frontadd = {
   type   : 'input',
   name   : 'frontaddQ',
@@ -109,6 +110,7 @@ const frontadd = {
     'Voullez-vous ajouter la partie front ?\nTapper Entrer ou sur n pour dire non (O/n)',
   default: 'O'
 }
+
 const attributeadd = {
   type   : 'input',
   name   : 'attributeaddname',
@@ -252,14 +254,7 @@ function creerunfichier (fichier, data) {
         recursive: true,
         silent   : true
       });
-      // var bar = new ProgressBar(':bar', { total: 50});
-      // var timer = setInterval(function () {
-      //   bar.tick();
-      //   if (bar.complete) {
-      //     console.log('\ncomplete\n');
-      //     clearInterval(timer);
-      //   }
-      // }, 100);
+     
       var contentLength = 128 * 1024;
 
       var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
@@ -324,12 +319,18 @@ function creerunfichier (fichier, data) {
       exec('npm install ',{
         cwd: './' + np.projectName + '/MailSender'
     });
+
     }
 
-    
+    const addf = await inquirer.prompt(frontadd)
+    if(addf.frontaddQ=="O"){
+      creerunrepertoir(np.projectName)
+      //-------Chargement de la fonctionnalité
+      exec('svn checkout https://github.com/morseck00/trunk/PROTOBOXFRONT',{
+          cwd: './' + np.projectName
+      }
+      )
+    }
+  
   }
-  
-  
-  
-  
 })()
