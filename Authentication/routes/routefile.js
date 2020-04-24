@@ -18,12 +18,12 @@ router.post('/register', async (req,res) => {
 })
 
 //route qui donne l'utilisateur qui s'est connecté
-router.get('/users/me', authenticate ,async (req,res)=> {
+router.get('/connected', authenticate ,async (req,res)=> {
    res.send(req.user)
 })
 
 //route qui modifie l'utilisateur qui s'est connecté
-router.patch('/connected',authenticate ,async (req,res) => {
+router.patch('/connected/update',authenticate ,async (req,res) => {
     const updates  = Object.keys(req.body)
     const allowedUpdates = proprietes.propriety.tab;
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))

@@ -7,7 +7,7 @@ const proprietes   = require('./propriety')
 
 
 //Route pour s'incrire
-router.post('/authentications', async (req,res) => {
+router.post('/register', async (req,res) => {
     const authentication = new Authentication(req.body);
     try{
         const token = await authentication.newAuthToken()
@@ -23,7 +23,7 @@ router.get('/authentications/me', authenticate ,async (req,res)=> {
 })
 
 //route qui modifie l'utilisateur qui s'est connecté
-router.patch('/authentications/me',authenticate ,async (req,res) => {
+router.patch('/connected',authenticate ,async (req,res) => {
     const updates  = Object.keys(req.body)
     const allowedUpdates = proprietes.propriety.tab;
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -48,7 +48,7 @@ router.patch('/authentications/me',authenticate ,async (req,res) => {
 })
 
 //Route pour se loger
-router.post('/authentications/login', async (req, res) => {
+router.post('/login', async (req, res) => {
     try {
         const authentication  = await Authentication.checkValidCredentials(req.body.email, req.body.password)
         const token = await authentication.newAuthToken()
@@ -61,7 +61,7 @@ router.post('/authentications/login', async (req, res) => {
 })
 
 //route pour supprimer le authentication
-router.delete('/authentications/me', authenticate, async (req,res) => {
+router.delete('/delete/me', authenticate, async (req,res) => {
     if (!ObjectID.isValid(req.authentication._id)) {
         return res.status(404).send();
     }
@@ -75,7 +75,7 @@ router.delete('/authentications/me', authenticate, async (req,res) => {
 })
 
 // route pour se deconnecter
-router.post('/authentications/logout', authenticate, async (req, res) => {
+router.post('/logout', authenticate, async (req, res) => {
     try {
         req.authentication.tokens = req.authentication.tokens.filter((token) =>{
          return token.token !== req.token 
@@ -88,7 +88,7 @@ router.post('/authentications/logout', authenticate, async (req, res) => {
 })
 
 //route pour deconnecer tous les authentications
-router.post('/authentications/logoutall', authenticate, async (req, res) => {
+router.post('/logoutall', authenticate, async (req, res) => {
     try {
         req.authentication.tokens = []
         await req.authentication.save()

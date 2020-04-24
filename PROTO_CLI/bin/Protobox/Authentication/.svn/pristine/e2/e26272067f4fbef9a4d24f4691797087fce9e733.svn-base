@@ -7,7 +7,7 @@ const proprietes   = require('./propriety')
 
 
 //Route pour s'incrire
-router.post('/users', async (req,res) => {
+router.post('/register', async (req,res) => {
     const user = new User(req.body);
     try{
         const token = await user.newAuthToken()
@@ -23,7 +23,7 @@ router.get('/users/me', authenticate ,async (req,res)=> {
 })
 
 //route qui modifie l'utilisateur qui s'est connecté
-router.patch('/users/me',authenticate ,async (req,res) => {
+router.patch('/connected',authenticate ,async (req,res) => {
     const updates  = Object.keys(req.body)
     const allowedUpdates = proprietes.propriety.tab;
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -48,7 +48,7 @@ router.patch('/users/me',authenticate ,async (req,res) => {
 })
 
 //Route pour se loger
-router.post('/users/login', async (req, res) => {
+router.post('/login', async (req, res) => {
     try {
         const user  = await User.checkValidCredentials(req.body.email, req.body.password)
         const token = await user.newAuthToken()
@@ -61,7 +61,7 @@ router.post('/users/login', async (req, res) => {
 })
 
 //route pour supprimer le user
-router.delete('/users/me', authenticate, async (req,res) => {
+router.delete('/delete/me', authenticate, async (req,res) => {
     if (!ObjectID.isValid(req.user._id)) {
         return res.status(404).send();
     }
@@ -75,7 +75,7 @@ router.delete('/users/me', authenticate, async (req,res) => {
 })
 
 // route pour se deconnecter
-router.post('/users/logout', authenticate, async (req, res) => {
+router.post('/logout', authenticate, async (req, res) => {
     try {
         req.user.tokens = req.user.tokens.filter((token) =>{
          return token.token !== req.token 
@@ -88,7 +88,7 @@ router.post('/users/logout', authenticate, async (req, res) => {
 })
 
 //route pour deconnecer tous les users
-router.post('/users/logoutall', authenticate, async (req, res) => {
+router.post('/logoutall', authenticate, async (req, res) => {
     try {
         req.user.tokens = []
         await req.user.save()
