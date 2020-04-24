@@ -8,13 +8,6 @@ const AuthenticationSchema  = new mongoose.Schema(
     datas.data
   );
 
-// AuthenticationSchema.virtual('posts', {
-//     ref: 'Post',
-//     localField: '_id',
-//     foreignField: 'author'
-// })
-
-
 AuthenticationSchema.statics.checkValidCredentials = async (email, password) => {
     const authentication = await Authentication.findOne({email})
 

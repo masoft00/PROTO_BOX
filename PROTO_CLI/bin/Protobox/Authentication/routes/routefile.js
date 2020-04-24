@@ -5,13 +5,13 @@ const {ObjectID}   = require('mongodb')
 const authenticate = require('../middleware/auth')
 const proprietes   = require('./propriety')
 
+
 //Route pour s'incrire
 router.post('/authentications', async (req,res) => {
     const authentication = new Authentication(req.body);
-    try{
-        // const token = await authentication.newAuthToken()
-        // res.status(201).send({authentication, token})
-        res.status(201).send({authentication})
+    try{ 
+        const token = await authentication.newAuthToken()
+        res.status(201).send({authentication, token})
     }catch(e){
         res.status(400).send(e)
     }

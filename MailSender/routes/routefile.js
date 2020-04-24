@@ -5,8 +5,7 @@ const router     = new express.Router()
 
 router.post('/sendmail', async (req, res) => {
   try {
-    let testAccount = await nodemailer.createTestAccount()
-
+    await nodemailer.createTestAccount()
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
       host  : 'smtp.gmail.com',
@@ -18,11 +17,11 @@ router.post('/sendmail', async (req, res) => {
       }
     })
     // send mail with defined transport object
-    let info = await transporter.sendMail({
+    await transporter.sendMail({
       from   : process.env.email, // sender address
       to     : req.body.destinataire, // list of receivers
       subject: req.body.subject, // Subject line
-      message: req.body.message // plain text body
+      text: req.body.text// plain text body
     })
     res.status(201).send('Message envoyé')
   } catch (e) {

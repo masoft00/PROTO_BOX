@@ -149,6 +149,19 @@ const attributeunique = {
   message: "l'attribut doit-il être unique ? (True /False)",
   default: false
 }
+
+//Question mail sender
+const mail = {
+  type   : 'String',
+  name   : 'mail',
+  message: "Veuillez mettre votre mail"
+}
+const password = {
+  type   : 'String',
+  name   : 'password',
+  message: "Veuiller mettre le mot de passe de votre compte gmail"
+}
+
 //------------Fonction pour créer un fichier-----------------//
 function creerunfichier (fichier, data) {
   fs.appendFile(fichier, data, err => {
@@ -243,6 +256,18 @@ function creerunfichier (fichier, data) {
           cwd: './' + np.projectName + '/Authentication'
       });
 
+    }else if(f.fonctionnalites[i] == 'Email Sending'){
+
+        //-------Chargement de la fonctionnalité
+        exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/MailSender',{
+          cwd: './' + np.projectName
+      }
+      )
+      const mail = await inquirer.prompt(mail)
+      const password = await inquirer.prompt(password)
+      let data ='email=' +mail +'\n'+'password=' +password
+
+        creerunfichier('./' +np.projectName +'/MailSender/.env',data)  
     }
   }
   
