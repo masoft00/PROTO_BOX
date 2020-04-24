@@ -9,7 +9,7 @@ const proprietes   = require('./propriety')
 //Route pour s'incrire
 router.post('/authentications', async (req,res) => {
     const authentication = new Authentication(req.body);
-    try{ 
+    try{
         const token = await authentication.newAuthToken()
         res.status(201).send({authentication, token})
     }catch(e){

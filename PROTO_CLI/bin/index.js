@@ -7,6 +7,7 @@ const fs          = require('fs')
 const exec        = require('child_process').exec
 const Promise     = require('bluebird')
 var replace       = require('replace')
+var ProgressBar = require('progress');
 
 //Function qui Affiche l'entête du nom du Programme
 function enteteproject () {
@@ -151,14 +152,14 @@ const attributeunique = {
 }
 
 //Question mail sender
-const mail = {
+const email = {
   type   : 'String',
-  name   : 'mail',
+  name   : 'emailname',
   message: "Veuillez mettre votre mail"
 }
 const password = {
-  type   : 'String',
-  name   : 'password',
+  type   : 'password',
+  name   : 'passwordname',
   message: "Veuiller mettre le mot de passe de votre compte gmail"
 }
 
@@ -212,15 +213,15 @@ function creerunfichier (fichier, data) {
         let data ='\n'+an.attributename_name +': { type: ' +at.type +',required: ' +re.require +', unique: ' +au.unique +'},\n'
 
         creerunfichier('./' +np.projectName +'/Authentication/models/data.js',data)        
-        //creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',datapropriety)        
-
+        //creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',datapropriety)  
+        
         if (ad2.attributeaddname == 'n') {
           let datapropriety=""
-          creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',datapropriety)  
+          creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',datapropriety) 
           break;
         }
+          
       }
-
       //-------bracket pour fermer le fichier yml
       let fermerproprietes = "]}\nmodule.exports.propriety=propriety;"
       let fermer = "}\n module.exports.data=data;"
@@ -251,24 +252,84 @@ function creerunfichier (fichier, data) {
         recursive: true,
         silent   : true
       });
+      // var bar = new ProgressBar(':bar', { total: 50});
+      // var timer = setInterval(function () {
+      //   bar.tick();
+      //   if (bar.complete) {
+      //     console.log('\ncomplete\n');
+      //     clearInterval(timer);
+      //   }
+      // }, 100);
+      var contentLength = 128 * 1024;
+
+      var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
+          complete: '='
+        , incomplete: ' '
+        , width: 30
+        , total: contentLength
+      });
+
+      (function next() {
+        if (contentLength) {
+          var chunk = Math.random() * 10 * 1024;
+          bar.tick(chunk);
+
+          if (!bar.complete) {
+            setTimeout(next, Math.random() * 1000);
+          }
+        }
+      })();
       
       exec('npm install ',{
           cwd: './' + np.projectName + '/Authentication'
       });
 
-    }else if(f.fonctionnalites[i] == 'Email Sending'){
+      
+    }else if(f.fonctionnalites[i] == "Email Sending"){
 
-        //-------Chargement de la fonctionnalité
-        exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/MailSender',{
-          cwd: './' + np.projectName
-      }
-      )
-      const mail = await inquirer.prompt(mail)
-      const password = await inquirer.prompt(password)
-      let data ='email=' +mail +'\n'+'password=' +password
+      creerunrepertoir(np.projectName)
+      //-------Chargement de la fonctionnalité
+      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/MailSender',{
+        cwd: './' + np.projectName
+        }
+       )
+    const mail = await inquirer.prompt(email)
+    const pass = await inquirer.prompt(password)
+    let data ='email=' +mail.emailname +'\n'+'password=' +pass.passwordname
 
-        creerunfichier('./' +np.projectName +'/MailSender/.env',data)  
+      creerunfichier('./' +np.projectName +'/MailSender/.env',data)
+
+    //animation chargement 
+
+      var contentLength = 128 * 1024;
+
+      var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
+          complete: '='
+        , incomplete: ' '
+        , width: 30
+        , total: contentLength
+      });
+
+      (function next() {
+        if (contentLength) {
+          var chunk = Math.random() * 10 * 1024;
+          bar.tick(chunk);
+
+          if (!bar.complete) {
+            setTimeout(next, Math.random() * 1000);
+          }
+        }
+      })();
+      
+      exec('npm install ',{
+        cwd: './' + np.projectName + '/MailSender'
+    });
     }
+
+    
   }
+  
+  
+  
   
 })()
