@@ -321,7 +321,5 @@ function creerunfichier (fichier, data) {
     });
 
     }
-
-
   }
 })()
