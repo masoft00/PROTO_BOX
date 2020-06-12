@@ -322,15 +322,6 @@ function creerunfichier (fichier, data) {
 
     }
 
-    const addf = await inquirer.prompt(frontadd)
-    if(addf.frontaddQ=="O"){
-      creerunrepertoir(np.projectName)
-      //-------Chargement de la fonctionnalité
-      exec('svn checkout https://github.com/morseck00/trunk/PROTOBOXFRONT',{
-          cwd: './' + np.projectName
-      }
-      )
-    }
-  
+
   }
 })()
