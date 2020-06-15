@@ -6,8 +6,8 @@ const clear       = require('clear')
 const fs          = require('fs')
 const exec        = require('child_process').exec
 const Promise     = require('bluebird')
-var replace       = require('replace')
-var ProgressBar = require('progress');
+const replace     = require('replace')
+const ProgressBar = require('progress');
 
 //Function qui Affiche l'entête du nom du Programme
 function enteteproject () {

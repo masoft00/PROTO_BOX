@@ -1,8 +1,6 @@
 const config = {
-  VERSION: 1,
-  BUILD: 1,
   URL: 'http://127.0.0.1',
-  PORT: 3000,
+  PORT: 3030,
   DB: {
     //MongoDB configuration for mongo DB
     HOST: 'localhost',

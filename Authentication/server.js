@@ -2,9 +2,9 @@ const express = require('express');
 require('./db/mongoose');
 var config    = require('./config/config');
 const routes  = require('./routes/routefile');
+var cors      = require('cors');
+const app     = express();
 
-var cors = require('cors');
-const app = express();
 app.use(cors());
 
 app.use(express.json());
@@ -16,5 +16,6 @@ app.get('/users/:id', function (req, res, next) {
 })
 
 app.listen(config.PORT,() =>{
-    console.log(`Live Developement Server is listening at 👍 http://${config.URL}:${config.PORT}/`);
+    console.log(`Live Developement Server is listening at 👍 ${config.HOST}:${config.PORT}/`);
 })
+
