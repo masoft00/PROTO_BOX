@@ -10,7 +10,7 @@ const replace     = require('replace')
 const ProgressBar = require('progress');
 
 //Function qui Affiche l'entête du nom du Programme
-function enteteproject () {
+function enteteproject() {
   clear()
   console.log(
     chalk.green(figlet.textSync('PROTO-BOX', { horizontalLayout: 'fitted' }))
@@ -39,7 +39,7 @@ const nameproject = {
   }
 }
 
-function creerunrepertoir (nomprojet) {
+function creerunrepertoir(nomprojet) {
   try {
     fs.mkdirSync(nomprojet)
   } catch (error) {
@@ -73,8 +73,8 @@ const fonctionnalites = {
 
 //questions sur les propriétes
 const nomEntite = {
-  type   : 'input',
-  name   : 'entityName',
+  type: 'input',
+  name: 'entityName',
   message: 'Veuillez mettre le nom entité',
   validate: input => {
     return new Promise((resolve, reject) => {
@@ -88,8 +88,8 @@ const nomEntite = {
 
 //questions sur les propriétes
 const ProjectFront = {
-  type   : 'input',
-  name   : 'FrontName',
+  type: 'input',
+  name: 'FrontName',
   message: 'Voullez-vous générer la partie Front ?',
   default: 'ProtoBoxFront',
   validate: input => {
@@ -104,30 +104,30 @@ const ProjectFront = {
 
 //Question pour voir si l'utilisateur a besion de= front
 const frontadd = {
-  type   : 'input',
-  name   : 'frontaddQ',
-  message: 
+  type: 'input',
+  name: 'frontaddQ',
+  message:
     'Voullez-vous ajouter la partie front ?\nTapper Entrer ou sur n pour dire non (O/n)',
   default: 'O'
 }
 
 const attributeadd = {
-  type   : 'input',
-  name   : 'attributeaddname',
-  message: 
+  type: 'input',
+  name: 'attributeaddname',
+  message:
     'Votre entité a déjà comme attribut email et password.\nVoullez-vous ajouter des attributs ?\nTapper Entrer ou sur n pour dire non (O/n)',
   default: 'O'
 }
 
 const attributeName = {
-  type   : 'String',
-  name   : 'attributename_name',
+  type: 'String',
+  name: 'attributename_name',
   message: "Nom de l'attribut"
 }
 
 const attributeType = {
-  name   : 'type',
-  type   : 'list',
+  name: 'type',
+  type: 'list',
   message: 'What is the type of your attribute ?',
   choices: [String, 'int', Number, 'password'],
   validate: function (value) {
@@ -140,66 +140,76 @@ const attributeType = {
 }
 
 const attributeRequire = {
-  name   : 'require',
-  type   : 'input',
+  name: 'require',
+  type: 'input',
   message: "l'attribut est-il obligatoire ? (True /False)",
   default: false
 }
 
 const attributeunique = {
-  name   : 'unique',
-  type   : 'input',
+  name: 'unique',
+  type: 'input',
   message: "l'attribut doit-il être unique ? (True /False)",
   default: false
 }
 
 //Question mail sender
 const email = {
-  type   : 'String',
-  name   : 'emailname',
+  type: 'String',
+  name: 'emailname',
   message: "Veuillez mettre votre mail"
 }
 const password = {
-  type   : 'password',
-  name   : 'passwordname',
+  type: 'password',
+  name: 'passwordname',
   message: "Veuiller mettre le mot de passe de votre compte gmail"
 }
 
 //------------Fonction pour créer un fichier-----------------//
-function creerunfichier (fichier, data) {
+function creerunfichier(fichier, data) {
   fs.appendFile(fichier, data, err => {
     if (err) throw err
   })
 }
 
-;(async () => {
+; (async () => {
   enteteproject()
   const np = await inquirer.prompt(nameproject)
-  const f  = await inquirer.prompt(fonctionnalites)
+  const f = await inquirer.prompt(fonctionnalites)
 
   for (let i = 0; i < f.fonctionnalites.length; i++) {
+    creerunrepertoir(np.projectName)
+    //-------Chargement de la fonctionnalité
+    exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/config', {
+      cwd: './' + np.projectName
+    })
+    exec('svn checkout https://github.com/morseck00/PROTOBOXFRONT/trunk/FRONT', {
+      cwd: './' + np.projectName
+    })
+
     if (f.fonctionnalites[i] == 'Authentication') {
       console.log(
         "Veuillez mettre le nom de l'entité pour la fonctionnalité " +
-          f.fonctionnalites[i]
+        f.fonctionnalites[i]
       )
-      creerunrepertoir(np.projectName)
-
+    
+    
       //-------Chargement de la fonctionnalité
-      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/Authentication',{
-          cwd: './' + np.projectName
+      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/Authentication', {
+        cwd: './' + np.projectName
       }
       )
+    
       const ne  = await inquirer.prompt(nomEntite)
       const ad  = await inquirer.prompt(attributeadd)
       const rep = ad.attributeaddname
-
+    
       //-------bracket pour commencé le fichier yml
-     
+    
       let ouverture = ""
-      creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',ouverture)
-      creerunfichier('./' +np.projectName +'/Authentication/models/data.js',ouverture)
-     
+      creerunfichier('./' + np.projectName + '/Authentication/routes/propriety.js', ouverture)
+      creerunfichier('./' + np.projectName + '/Authentication/models/data.js', ouverture)
+    
     
       while (rep == 'O') {
         const an  = await inquirer.prompt(attributeName)
@@ -207,31 +217,31 @@ function creerunfichier (fichier, data) {
         const re  = await inquirer.prompt(attributeRequire)
         const au  = await inquirer.prompt(attributeunique)
         const ad2 = await inquirer.prompt(attributeadd)
-
-        
-        let datapropriety=",'"+an.attributename_name+"'"
-        creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',datapropriety)     
-       
-        let data ='\n'+an.attributename_name +': { type: ' +at.type +',required: ' +re.require +', unique: ' +au.unique +'},\n'
-
-        creerunfichier('./' +np.projectName +'/Authentication/models/data.js',data)        
+    
+    
+        let datapropriety = ",'" + an.attributename_name + "'"
+        creerunfichier('./' + np.projectName + '/Authentication/routes/propriety.js', datapropriety)
+    
+        let data = '\n' + an.attributename_name + ': { type: ' + at.type + ',required: ' + re.require + ', unique: ' + au.unique + '},\n'
+    
+        creerunfichier('./' + np.projectName + '/Authentication/models/data.js', data)
         //creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',datapropriety)  
-        
+    
         if (ad2.attributeaddname == 'n') {
-          let datapropriety=""
-          creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',datapropriety) 
+          let datapropriety = ""
+          creerunfichier('./' + np.projectName + '/Authentication/routes/propriety.js', datapropriety)
           break;
         }
-          
+    
       }
       //-------bracket pour fermer le fichier yml
       let fermerproprietes = "]}\nmodule.exports.propriety=propriety;"
       let fermer = "}\n module.exports.data=data;"
-      creerunfichier('./' +np.projectName +'/Authentication/models/data.js',fermer)
-      creerunfichier('./' +np.projectName +'/Authentication/routes/propriety.js',fermerproprietes)    
+      creerunfichier('./' + np.projectName + '/Authentication/models/data.js', fermer)
+      creerunfichier('./' + np.projectName + '/Authentication/routes/propriety.js', fermerproprietes)
     
       replace({
-        regex      :'user',
+        regex: 'user',
         replacement: ne.entityName,
         paths: [
           './' + np.projectName + '/Authentication/routes/routefile.js',
@@ -240,11 +250,11 @@ function creerunfichier (fichier, data) {
           './' + np.projectName + '/Authentication/server.js',
         ],
         recursive: true,
-        silent   : true
+        silent: true
       });
-
+    
       replace({
-        regex      :'User',
+        regex: 'User',
         replacement: ne.entityName.charAt(0).toUpperCase() + ne.entityName.substring(1).toLowerCase(),
         paths: [
           './' + np.projectName + '/Authentication/routes/routefile.js',
@@ -252,74 +262,81 @@ function creerunfichier (fichier, data) {
           './' + np.projectName + '/Authentication/middleware/auth.js',
         ],
         recursive: true,
-        silent   : true
+        silent: true
       });
-     
+    
       var contentLength = 128 * 1024;
-
+    
       var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
-          complete: '='
+        complete: '='
         , incomplete: ' '
         , width: 30
         , total: contentLength
       });
-
+    
       (function next() {
         if (contentLength) {
           var chunk = Math.random() * 10 * 1024;
           bar.tick(chunk);
-
+    
           if (!bar.complete) {
-            setTimeout(next, Math.random() * 1000);
+            setTimeout(next, Math.random() * 2000);
           }
         }
       })();
-      
-      exec('npm install ',{
-          cwd: './' + np.projectName + '/Authentication'
+    
+      // Installer les modules dans l'api de l'authentification
+      exec('npm install ', {
+        cwd: './' + np.projectName + '/Authentication'
       });
 
-      
-    }else if(f.fonctionnalites[i] == "Email Sending"){
+      // Installer les modules dans la partie Front
+      exec('npm install ', {
+        cwd: './' + np.projectName + '/FRONT'
+      });
+
+    } 
+
+    if (f.fonctionnalites[i] == "Email Sending") {
 
       creerunrepertoir(np.projectName)
       //-------Chargement de la fonctionnalité
-      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/MailSender',{
+      exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/MailSender', {
         cwd: './' + np.projectName
-        }
-       )
-    const mail = await inquirer.prompt(email)
-    const pass = await inquirer.prompt(password)
-    let data ='email=' +mail.emailname +'\n'+'password=' +pass.passwordname
-
-      creerunfichier('./' +np.projectName +'/MailSender/.env',data)
-
-    //animation chargement 
-
+      }
+      )
+      const mail = await inquirer.prompt(email)
+      const pass = await inquirer.prompt(password)
+      let data = 'email=' + mail.emailname + '\n' + 'password=' + pass.passwordname
+    
+      creerunfichier('./' + np.projectName + '/MailSender/.env', data)
+    
+      //animation chargement 
+    
       var contentLength = 128 * 1024;
-
+    
       var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
-          complete: '='
+        complete: '='
         , incomplete: ' '
         , width: 30
         , total: contentLength
       });
-
+    
       (function next() {
         if (contentLength) {
           var chunk = Math.random() * 10 * 1024;
           bar.tick(chunk);
-
+    
           if (!bar.complete) {
-            setTimeout(next, Math.random() * 1000);
+            setTimeout(next, Math.random() * 2000);
           }
         }
       })();
-      
-      exec('npm install ',{
+    
+      exec('npm install ', {
         cwd: './' + np.projectName + '/MailSender'
-    });
-
+      });
+    
     }
   }
 })()
