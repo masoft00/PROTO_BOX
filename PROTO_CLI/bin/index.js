@@ -186,12 +186,15 @@ function creerunfichier(fichier, data) {
         exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/db', {
             cwd: './' + np.projectName
         })
-        exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/package.json', {
-                cwd: './' + np.projectName
-            })
-            // exec('svn checkout https://github.com/morseck00/PROTOBOXFRONT/trunk/FRONT', {
-            //     cwd: './' + np.projectName
-            // })
+        exec('svn export https://github.com/morseck00/PROTO_BOX/trunk/package.json', {
+            cwd: './' + np.projectName
+        });
+        exec('svn export https://github.com/morseck00/PROTO_BOX/trunk/server.js', {
+            cwd: './' + np.projectName
+        });
+        // exec('svn checkout https://github.com/morseck00/PROTOBOXFRONT/trunk/FRONT', {
+        //     cwd: './' + np.projectName
+        // })
 
         if (f.fonctionnalites[i] == 'Authentication') {
             console.log(
@@ -298,6 +301,56 @@ function creerunfichier(fichier, data) {
             //     cwd: './' + np.projectName + '/FRONT'
             // });
 
+        }
+
+        if (f.fonctionnalites[i] == "Email Sending") {
+
+            creerunrepertoir(np.projectName)
+                //-------Chargement de la fonctionnalité
+            exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/MailSender', {
+                cwd: './' + np.projectName
+            })
+            const mail = await inquirer.prompt(email)
+            const pass = await inquirer.prompt(password)
+            let data = 'email=' + mail.emailname + '\n' + 'password=' + pass.passwordname
+
+            creerunfichier('./' + np.projectName + '/.env', data)
+
+            //animation chargement 
+
+            var contentLength = 128 * 1024;
+
+            var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
+                complete: '=',
+                incomplete: ' ',
+                width: 30,
+                total: contentLength
+            });
+
+            (function next() {
+                if (contentLength) {
+                    var chunk = Math.random() * 10 * 1024;
+                    bar.tick(chunk);
+
+                    if (!bar.complete) {
+                        setTimeout(next, Math.random() * 1000);
+                    }
+                }
+            })();
+
+            replace({
+                regex: '//sendmail',
+                replacement: "",
+                paths: [
+                    './' + np.projectName + '/server.js',
+                ],
+                recursive: true,
+                silent: true
+            });
+
+            exec('npm install ', {
+                cwd: './' + np.projectName
+            });
         }
 
     }
