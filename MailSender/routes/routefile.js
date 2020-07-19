@@ -18,12 +18,10 @@ router.post('/sendmail', async(req, res) => {
             })
             // send mail with defined transport object
         await transporter.sendMail({
-
             from: process.env.email, // sender address
             to: req.body.destination, // list of receivers
             subject: req.body.subject, // Subject line
-            text: req.body.text, // plain text body
-            html: '<b>' + req.body.text + '</b>'
+            text: req.body.message, // plain text body
         })
         res.status(201).send('Message envoyé')
     } catch (e) {

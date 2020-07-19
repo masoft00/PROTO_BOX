@@ -16,7 +16,7 @@ const cors = require('cors');
 
 //sendmail const routes = require('./MailSender/routes/routefile');
 //sendmail app.use(cors());
-//sendmail app.get('/tests/:id', function(req, res, next) {
+//sendmail app.get('/sendmail/:id', function(req, res, next) {
 //sendmail     res.json({ msg: 'This is CORS-enabled for all origins!' });
 //sendmail })
 //sendmail app.use(express.json());
