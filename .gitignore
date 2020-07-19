@@ -1,1 +1,3 @@
 /PROTO_CLI/bin/Protobox
+/node_modules
+/.gitignore
