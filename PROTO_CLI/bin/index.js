@@ -310,6 +310,13 @@ function creerunfichier(fichier, data) {
             exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/MailSender', {
                 cwd: './' + np.projectName
             })
+
+            exec('svn export https://github.com/morseck00/PROTO_BOX/trunk/package.json', {
+                cwd: './' + np.projectName
+            });
+            exec('svn export https://github.com/morseck00/PROTO_BOX/trunk/server.js', {
+                cwd: './' + np.projectName
+            });
             const mail = await inquirer.prompt(email)
             const pass = await inquirer.prompt(password)
             let data = 'email=' + mail.emailname + '\n' + 'password=' + pass.passwordname
