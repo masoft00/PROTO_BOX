@@ -233,7 +233,6 @@ function creerunfichier(fichier, data) {
 
                 let datapropriety = ",'" + an.attributename_name + "'"
                 creerunfichier('./' + np.projectName + '/Authentication/routes/propriety.js', datapropriety)
-
                 let data = '\n' + an.attributename_name + ': { type: ' + at.type + ',required: ' + re.require + ', unique: ' + au.unique + '},\n'
 
                 creerunfichier('./' + np.projectName + '/Authentication/models/data.js', data)
@@ -401,7 +400,7 @@ function creerunfichier(fichier, data) {
                 const au = await inquirer.prompt(attributeunique)
                 const ad2 = await inquirer.prompt(attributeadd)
 
-                let datapropriety = "'" + an.attributename_name + "'"
+                let datapropriety = "'" + an.attributename_name + "',"
                 creerunfichier('./' + np.projectName + '/CRUD/routes/propriety.js', datapropriety)
 
                 let data = '\n' + an.attributename_name + ': { type: ' + at.type + ',required: ' + re.require + ', unique: ' + au.unique + '},\n'
