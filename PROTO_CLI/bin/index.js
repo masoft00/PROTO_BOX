@@ -54,13 +54,9 @@ const fonctionnalites = {
     name: 'fonctionnalites',
     message: 'Veuiller selectionner une fonctionnalité SVP: \n',
     choices: [
-        'Authentication',
-        'File Upload',
+        'Authentication & Registration',
         'Email Sending',
-        'Contact Form',
-        'Pdf Generator',
-        'Crud',
-        'Registration'
+        'CRUD',
     ],
     validate: checkbox => {
         return new Promise((resolve, reject) => {
@@ -300,6 +296,15 @@ function creerunfichier(fichier, data) {
                     }
                 }
             })();
+            replace({
+                regex: '//auth',
+                replacement: "",
+                paths: [
+                    './' + np.projectName + '/server.js',
+                ],
+                recursive: true,
+                silent: true
+            });
 
             // Installer les modules dans l'api de l'authentification
             exec('npm install ', {
@@ -312,7 +317,6 @@ function creerunfichier(fichier, data) {
             // });
 
         }
-
         if (f.fonctionnalites[i] == "Email Sending") {
 
             creerunrepertoir(np.projectName)
@@ -369,6 +373,7 @@ function creerunfichier(fichier, data) {
                 cwd: './' + np.projectName
             });
         }
+
 
     }
 })()
