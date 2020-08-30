@@ -12,12 +12,17 @@
     "dependencies": {
         "bcryptjs": "^2.4.3",
         "cors": "^2.8.5",
-        "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^5.9.25",
         "nodemailer": "^6.4.10",
-        "nodemon": "^2.0.4",
-        "validator": "^13.1.1"
+        "validator": "^13.1.1",
+        "amd-loader": "0.0.8"
+
+    },
+    "devDependencies": {
+        "dotenv": "^8.2.0",
+        "nodemon": "^2.0.4"
     }
+
 }

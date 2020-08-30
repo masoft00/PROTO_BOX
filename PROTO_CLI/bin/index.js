@@ -202,7 +202,7 @@ function creerunfichier(fichier, data) {
         //     cwd: './' + np.projectName
         // })
 
-        if (f.fonctionnalites[i] == 'Authentication') {
+        if (f.fonctionnalites[i] == 'Authentication & Registration') {
             console.log(
                     "Veuillez mettre le nom de l'entité pour la fonctionnalité " +
                     f.fonctionnalites[i]
@@ -374,6 +374,112 @@ function creerunfichier(fichier, data) {
             });
         }
 
+        if (f.fonctionnalites[i] == 'CRUD') {
+            console.log(
+                    "Veuillez mettre le nom de l'entité pour la fonctionnalité " +
+                    f.fonctionnalites[i]
+                )
+                //-------Chargement de la fonctionnalité
+            exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/CRUD', {
+                cwd: './' + np.projectName
+            })
 
+            const ne = await inquirer.prompt(nomEntite)
+            const ad = await inquirer.prompt(attributeadd)
+            const rep = ad.attributeaddname
+
+            //-------bracket pour commencé le fichier yml
+
+            let ouverture = ""
+            creerunfichier('./' + np.projectName + '/CRUD/routes/propriety.js', ouverture)
+            creerunfichier('./' + np.projectName + '/CRUD/models/data.js', ouverture)
+
+            while (rep == 'O') {
+                const an = await inquirer.prompt(attributeName)
+                const at = await inquirer.prompt(attributeType)
+                const re = await inquirer.prompt(attributeRequire)
+                const au = await inquirer.prompt(attributeunique)
+                const ad2 = await inquirer.prompt(attributeadd)
+
+                let datapropriety = "'" + an.attributename_name + "'"
+                creerunfichier('./' + np.projectName + '/CRUD/routes/propriety.js', datapropriety)
+
+                let data = '\n' + an.attributename_name + ': { type: ' + at.type + ',required: ' + re.require + ', unique: ' + au.unique + '},\n'
+
+                creerunfichier('./' + np.projectName + '/CRUD/models/data.js', data)
+
+                if (ad2.attributeaddname == 'n') {
+                    let datapropriety = ""
+                    creerunfichier('./' + np.projectName + '/CRUD/routes/propriety.js', datapropriety)
+                    break;
+                }
+            }
+            //-------bracket pour fermer le fichier propriety
+            let fermerproprietes = "]}\nmodule.exports.propriety=propriety;"
+            let fermer = "}\n module.exports.data=data;"
+            creerunfichier('./' + np.projectName + '/CRUD/models/data.js', fermer)
+            creerunfichier('./' + np.projectName + '/CRUD/routes/propriety.js', fermerproprietes)
+
+            replace({
+                regex: 'crud',
+                replacement: ne.entityName,
+                paths: [
+                    './' + np.projectName + '/CRUD/routes/routefile.js',
+                    './' + np.projectName + '/CRUD/models/models.js',
+                    './' + np.projectName + '/server.js',
+                ],
+                recursive: true,
+                silent: true
+            });
+
+            replace({
+                regex: 'Crud',
+                replacement: ne.entityName.charAt(0).toUpperCase() + ne.entityName.substring(1).toLowerCase(),
+                paths: [
+                    './' + np.projectName + '/CRUD/routes/routefile.js',
+                    './' + np.projectName + '/CRUD/models/models.js',
+                ],
+                recursive: true,
+                silent: true
+            });
+
+            var contentLength = 128 * 1024;
+            var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
+                complete: '=',
+                incomplete: ' ',
+                width: 30,
+                total: contentLength
+            });
+
+            (function next() {
+                if (contentLength) {
+                    var chunk = Math.random() * 10 * 1024;
+                    bar.tick(chunk);
+
+                    if (!bar.complete) {
+                        setTimeout(next, Math.random() * 2000);
+                    }
+                }
+            })();
+            replace({
+                regex: '//CrudSer',
+                replacement: "",
+                paths: [
+                    './' + np.projectName + '/server.js',
+                ],
+                recursive: true,
+                silent: true
+            });
+
+            // Installer les modules dans l'api de Crud
+            exec('npm install ', {
+                cwd: './' + np.projectName
+            });
+
+            // // Installer les modules dans la partie Front
+            // exec('npm install ', {
+            //     cwd: './' + np.projectName + '/FRONT'
+            // });
+        }
     }
 })()
