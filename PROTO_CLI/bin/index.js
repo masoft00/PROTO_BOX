@@ -485,14 +485,16 @@ function creerunfichier(fichier, data) {
 
             creerunrepertoir(np.projectName)
                 //-------Chargement de la fonctionnalité
+
+            exec('svn export https://github.com/morseck00/PROTO_BOX/trunk/server.js', {
+                cwd: './' + np.projectName
+            });
+
             exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/PdfGenerator', {
                 cwd: './' + np.projectName
             })
 
             exec('svn export https://github.com/morseck00/PROTO_BOX/trunk/package.json', {
-                cwd: './' + np.projectName
-            });
-            exec('svn export https://github.com/morseck00/PROTO_BOX/trunk/server.js', {
                 cwd: './' + np.projectName
             });
 
