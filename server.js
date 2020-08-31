@@ -4,21 +4,21 @@ const app = express();
 const cors = require('cors');
 
 //auth require('./db/mongoose');
-//auth const routes1 = require('./Authentication/routes/routefile');
+//auth const routesAuthenticate = require('./Authentication/routes/routefile');
 //auth app.use(cors());
 //auth app.use(express.json());
-//auth app.use(routes1);
+//auth app.use(routesAuthenticate);
 //auth app.get('/tests/:id', function(req, res, next) {
 //auth     res.json({ msg: 'This is CORS-enabled for all origins!' });
 //auth })
 
-//sendmail const routes = require('./MailSender/routes/routefile');
+//sendmail const routesEmail = require('./MailSender/routes/routefile');
 //sendmail app.use(cors());
 //sendmail app.get('/sendmail/:id', function(req, res, next) {
 //sendmail     res.json({ msg: 'This is CORS-enabled for all origins!' });
 //sendmail })
 //sendmail app.use(express.json());
-//sendmail app.use(routes);
+//sendmail app.use(routesEmail);
 
 //CrudSer const bodyParser = require('body-parser');
 //CrudSer const routesCrud = require('./CRUD/routes/routefile')

@@ -63,8 +63,9 @@ router.patch('/:id', getLine, async(req, res) => {
     }
 
     try {
-        const updatedSubscriber = await res.crud.save()
-        res.json(updatedSubscriber)
+        updates.forEach((update) => req.crud[update] = req.body[update])
+        await req.crud.save()
+        res.send(req.crud);
     } catch {
         res.status(400).json({ message: err.message })
     }
