@@ -515,6 +515,15 @@ function creerunfichier(fichier, data) {
                     }
                 }
             })();
+            replace({
+                regex: '//pdfGenerator',
+                replacement: "",
+                paths: [
+                    './' + np.projectName + '/server.js',
+                ],
+                recursive: true,
+                silent: true
+            });
             exec('npm install ', {
                 cwd: './' + np.projectName
             });
