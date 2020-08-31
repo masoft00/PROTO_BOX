@@ -57,6 +57,7 @@ const fonctionnalites = {
         'Authentication & Registration',
         'Email Sending',
         'CRUD',
+        ''
     ],
     validate: checkbox => {
         return new Promise((resolve, reject) => {
@@ -372,7 +373,6 @@ function creerunfichier(fichier, data) {
                 cwd: './' + np.projectName
             });
         }
-
         if (f.fonctionnalites[i] == 'CRUD') {
             console.log(
                     "Veuillez mettre le nom de l'entité pour la fonctionnalité " +
@@ -479,6 +479,45 @@ function creerunfichier(fichier, data) {
             // exec('npm install ', {
             //     cwd: './' + np.projectName + '/FRONT'
             // });
+        }
+
+        if (f.fonctionnalites[i] == "Pdf Generator") {
+
+            creerunrepertoir(np.projectName)
+                //-------Chargement de la fonctionnalité
+            exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/PdfGenerator', {
+                cwd: './' + np.projectName
+            })
+
+            exec('svn export https://github.com/morseck00/PROTO_BOX/trunk/package.json', {
+                cwd: './' + np.projectName
+            });
+            exec('svn export https://github.com/morseck00/PROTO_BOX/trunk/server.js', {
+                cwd: './' + np.projectName
+            });
+
+            //animation chargement 
+            var contentLength = 128 * 1024;
+            var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
+                complete: '=',
+                incomplete: ' ',
+                width: 30,
+                total: contentLength
+            });
+
+            (function next() {
+                if (contentLength) {
+                    var chunk = Math.random() * 10 * 1024;
+                    bar.tick(chunk);
+
+                    if (!bar.complete) {
+                        setTimeout(next, Math.random() * 1000);
+                    }
+                }
+            })();
+            exec('npm install ', {
+                cwd: './' + np.projectName
+            });
         }
     }
 })()

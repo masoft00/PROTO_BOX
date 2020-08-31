@@ -2,6 +2,11 @@ const express = require('express');
 const config = require('./config/config');
 const app = express();
 const cors = require('cors');
+const bodyParser = require('body-parser');
+
+//pdfGenerator app.use(bodyParser.urlencoded({ extended: true }));
+//pdfGenerator const pdfRoute = require('./PdfGenerator/routes/pdfmake');
+//pdfGenerator app.use('/pdfMake', pdfRoute);
 
 //auth require('./db/mongoose');
 //auth const routesAuthenticate = require('./Authentication/routes/routefile');
@@ -20,7 +25,7 @@ const cors = require('cors');
 //sendmail app.use(express.json());
 //sendmail app.use(routesEmail);
 
-//CrudSer const bodyParser = require('body-parser');
+
 //CrudSer const routesCrud = require('./CRUD/routes/routefile')
 //CrudSer require('./db/mongoose');
 //CrudSer app.use(express.json())
