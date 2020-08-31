@@ -57,7 +57,7 @@ const fonctionnalites = {
         'Authentication & Registration',
         'Email Sending',
         'CRUD',
-        ''
+        'Pdf Generator'
     ],
     validate: checkbox => {
         return new Promise((resolve, reject) => {
