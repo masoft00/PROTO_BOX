@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Crud = require('../models/models');
 const app = express();
+const { ObjectID } = require('mongodb')
 const bodyParser = require('body-parser');
 const proprietes = require('./propriety')
 
@@ -50,26 +51,45 @@ router.get('/getOne/:id', getLine, (req, res) => {
 })
 
 // Update one subscriber
-router.patch('/:id', getLine, async(req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = proprietes.propriety.tab;
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-    const _id = req.crud._id
-    if (!isValidOperation) {
-        res.status(400).send({ error: 'Invalid request' })
-    }
-    if (!ObjectID.isValid(_id)) {
-        return res.status(404).send();
-    }
 
-    try {
-        updates.forEach((update) => req.crud[update] = req.body[update])
-        await req.crud.save()
-        res.send(req.crud);
-    } catch {
-        res.status(400).json({ message: err.message })
-    }
-});
+const updates = Object.keys(req.body)
+const allowedUpdates = proprietes.propriety.tab;
+const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+const _id = req.crud._id
+if (!isValidOperation) {
+    res.status(400).send({ error: 'Invalid request' })
+}
+if (!ObjectID.isValid(_id)) {
+    return res.status(404).send();
+}
+
+try {
+    updates.forEach((update) => req.crud[update] = req.body[update])
+    await req.crud.save()
+    res.send(req.Crud);
+} catch (error) {
+    res.status(400).send()
+}
+// router.patch('/:id', getLine, async(req, res) => {
+//     const updates = Object.keys(req.body)
+//     const allowedUpdates = proprietes.propriety.tab;
+//     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+//     const _id = req.crud._id
+//     if (!isValidOperation) {
+//         res.status(400).send({ error: 'Invalid request' })
+//     }
+//     if (!ObjectID.isValid(_id)) {
+//         return res.status(404).send();
+//     }
+
+//     try {
+//         updates.forEach((update) => req.crud[update] = req.body[update])
+//         await req.crud.save()
+//         res.send(req.crud);
+//     } catch {
+//         res.status(400).json({ message: err.message })
+//     }
+// });
 //supprimer une ligne
 
 router.delete('/delete/:id', getLine, async(req, res) => {

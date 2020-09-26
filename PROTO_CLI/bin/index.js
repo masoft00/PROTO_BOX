@@ -175,15 +175,14 @@ function creerunfichier(fichier, data) {
     const f = await inquirer.prompt(fonctionnalites)
 
     for (let i = 0; i < f.fonctionnalites.length; i++) {
+
         // try {
         //     fs.statSync("../" + np.projectName);
         //     console.log("le dossier existe");
         // } catch (err) {
         //     if (err.code === 'ENOENT') {
-
         //     }
         // }
-
         creerunrepertoir(np.projectName)
             //-------Chargement de la fonctionnalité
         exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/config', {
@@ -198,11 +197,9 @@ function creerunfichier(fichier, data) {
         exec('svn export https://github.com/morseck00/PROTO_BOX/trunk/server.js', {
             cwd: './' + np.projectName
         });
-
         // exec('svn checkout https://github.com/morseck00/PROTOBOXFRONT/trunk/FRONT', {
         //     cwd: './' + np.projectName
         // })
-
         if (f.fonctionnalites[i] == 'Authentication & Registration') {
             console.log(
                     "Veuillez mettre le nom de l'entité pour la fonctionnalité " +
@@ -479,7 +476,6 @@ function creerunfichier(fichier, data) {
             //     cwd: './' + np.projectName + '/FRONT'
             // });
         }
-
         if (f.fonctionnalites[i] == "Pdf Generator") {
 
             creerunrepertoir(np.projectName)

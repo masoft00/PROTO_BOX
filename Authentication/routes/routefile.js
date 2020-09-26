@@ -21,7 +21,7 @@ router.post('/register', async(req, res) => {
 //lister les users
 router.get('/lister', async(req, res) => {
     try {
-        const test = await dfghjkl.find()
+        const test = await User.find()
         res.json(test)
     } catch (err) {
         res.status(500).json({ message: err.message })
