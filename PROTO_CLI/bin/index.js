@@ -9,6 +9,12 @@ const exec = require('child_process').exec
 const Promise = require('bluebird')
 const replace = require('replace')
 const ProgressBar = require('progress');
+const { async } = require('replace/bin/shared-options')
+const { assert } = require('console')
+const validate = require('./validate')
+const cliProgress = require('cli-progress');
+
+
 
 //Function qui Affiche l'entête du nom du Programme
 function enteteproject() {
@@ -37,14 +43,6 @@ const nameproject = {
             }
             resolve(true)
         })
-    }
-}
-
-function creerunrepertoir(nomprojet) {
-    try {
-        fs.mkdirSync(nomprojet)
-    } catch (error) {
-        console.log('Erreur lors de la création du repertoire')
     }
 }
 
@@ -153,12 +151,17 @@ const attributeunique = {
 const email = {
     type: 'String',
     name: 'emailname',
-    message: "Veuillez mettre votre mail"
+    message: "Veuillez mettre votre mail",
+    validate: value => validate.validateEmail(value) ?
+        true : logSymbols.warning + ' Please enter a valid email address'
 }
 const password = {
     type: 'password',
     name: 'passwordname',
-    message: "Veuiller mettre le mot de passe de votre compte gmail"
+    message: "Veuiller mettre le mot de passe de votre compte gmail",
+    mask: '*',
+    validate: value => value.length ?
+        true : logSymbols.warning + ' Please enter your password'
 }
 
 //------------Fonction pour créer un fichier-----------------//
@@ -168,38 +171,37 @@ function creerunfichier(fichier, data) {
     })
 }
 
-;
 (async() => {
     enteteproject()
     const np = await inquirer.prompt(nameproject)
     const f = await inquirer.prompt(fonctionnalites)
 
     for (let i = 0; i < f.fonctionnalites.length; i++) {
+        //folder projet name
+        try {
+            fs.mkdirSync(np.projectName)
+        } catch (err) {
+            if (err.code === 'ENOENT') {
+                console.log('file or directory does not exist');
+            }
+        }
 
-        // try {
-        //     fs.statSync("../" + np.projectName);
-        //     console.log("le dossier existe");
-        // } catch (err) {
-        //     if (err.code === 'ENOENT') {
-        //     }
-        // }
-        creerunrepertoir(np.projectName)
-            //-------Chargement de la fonctionnalité
         exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/config', {
             cwd: './' + np.projectName
         })
+
         exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/db', {
             cwd: './' + np.projectName
         })
+
         exec('svn export https://github.com/morseck00/PROTO_BOX/trunk/package.json', {
             cwd: './' + np.projectName
-        });
+        })
+
         exec('svn export https://github.com/morseck00/PROTO_BOX/trunk/server.js', {
             cwd: './' + np.projectName
-        });
-        // exec('svn checkout https://github.com/morseck00/PROTOBOXFRONT/trunk/FRONT', {
-        //     cwd: './' + np.projectName
-        // })
+        })
+
         if (f.fonctionnalites[i] == 'Authentication & Registration') {
             console.log(
                     "Veuillez mettre le nom de l'entité pour la fonctionnalité " +
@@ -220,14 +222,12 @@ function creerunfichier(fichier, data) {
             creerunfichier('./' + np.projectName + '/Authentication/routes/propriety.js', ouverture)
             creerunfichier('./' + np.projectName + '/Authentication/models/data.js', ouverture)
 
-
             while (rep == 'O') {
                 const an = await inquirer.prompt(attributeName)
                 const at = await inquirer.prompt(attributeType)
                 const re = await inquirer.prompt(attributeRequire)
                 const au = await inquirer.prompt(attributeunique)
                 const ad2 = await inquirer.prompt(attributeadd)
-
 
                 let datapropriety = ",'" + an.attributename_name + "'"
                 creerunfichier('./' + np.projectName + '/Authentication/routes/propriety.js', datapropriety)
@@ -241,8 +241,8 @@ function creerunfichier(fichier, data) {
                     creerunfichier('./' + np.projectName + '/Authentication/routes/propriety.js', datapropriety)
                     break;
                 }
-
             }
+
             //-------bracket pour fermer le fichier yml
             let fermerproprietes = "]}\nmodule.exports.propriety=propriety;"
             let fermer = "}\n module.exports.data=data;"
@@ -274,25 +274,8 @@ function creerunfichier(fichier, data) {
                 silent: true
             });
 
-            var contentLength = 128 * 1024;
 
-            var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
-                complete: '=',
-                incomplete: ' ',
-                width: 30,
-                total: contentLength
-            });
 
-            (function next() {
-                if (contentLength) {
-                    var chunk = Math.random() * 10 * 1024;
-                    bar.tick(chunk);
-
-                    if (!bar.complete) {
-                        setTimeout(next, Math.random() * 2000);
-                    }
-                }
-            })();
             replace({
                 regex: '//auth',
                 replacement: "",
@@ -308,15 +291,15 @@ function creerunfichier(fichier, data) {
                 cwd: './' + np.projectName
             });
 
-            // // Installer les modules dans la partie Front
-            // exec('npm install ', {
-            //     cwd: './' + np.projectName + '/FRONT'
-            // });
-
-        }
-        if (f.fonctionnalites[i] == "Email Sending") {
-            creerunrepertoir(np.projectName)
-                //-------Chargement de la fonctionnalité
+        } else if (f.fonctionnalites[i] == "Email Sending") {
+            try {
+                fs.mkdirSync(np.projectName)
+            } catch (err) {
+                if (err.code === 'ENOENT') {
+                    console.log('file or directory does not exist');
+                }
+            }
+            //-------Chargement de la fonctionnalité
             exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/MailSender', {
                 cwd: './' + np.projectName
             })
@@ -332,29 +315,6 @@ function creerunfichier(fichier, data) {
             let data = 'email=' + mail.emailname + '\n' + 'password=' + pass.passwordname
 
             creerunfichier('./' + np.projectName + '/.env', data)
-
-            //animation chargement 
-
-            var contentLength = 128 * 1024;
-
-            var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
-                complete: '=',
-                incomplete: ' ',
-                width: 30,
-                total: contentLength
-            });
-
-            (function next() {
-                if (contentLength) {
-                    var chunk = Math.random() * 10 * 1024;
-                    bar.tick(chunk);
-
-                    if (!bar.complete) {
-                        setTimeout(next, Math.random() * 1000);
-                    }
-                }
-            })();
-
             replace({
                 regex: '//sendmail',
                 replacement: "",
@@ -368,8 +328,7 @@ function creerunfichier(fichier, data) {
             exec('npm install ', {
                 cwd: './' + np.projectName
             });
-        }
-        if (f.fonctionnalites[i] == 'CRUD') {
+        } else if (f.fonctionnalites[i] == 'CRUD') {
             console.log(
                     "Veuillez mettre le nom de l'entité pour la fonctionnalité " +
                     f.fonctionnalites[i]
@@ -437,25 +396,6 @@ function creerunfichier(fichier, data) {
                 recursive: true,
                 silent: true
             });
-
-            var contentLength = 128 * 1024;
-            var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
-                complete: '=',
-                incomplete: ' ',
-                width: 30,
-                total: contentLength
-            });
-
-            (function next() {
-                if (contentLength) {
-                    var chunk = Math.random() * 10 * 1024;
-                    bar.tick(chunk);
-
-                    if (!bar.complete) {
-                        setTimeout(next, Math.random() * 2000);
-                    }
-                }
-            })();
             replace({
                 regex: '//CrudSer',
                 replacement: "",
@@ -466,46 +406,28 @@ function creerunfichier(fichier, data) {
                 silent: true
             });
 
-            // Installer les modules dans l'api de Crud
+
             exec('npm install ', {
                 cwd: './' + np.projectName
             });
-
-            // // Installer les modules dans la partie Front
-            // exec('npm install ', {
-            //     cwd: './' + np.projectName + '/FRONT'
-            // });
         }
+
         if (f.fonctionnalites[i] == "Pdf Generator") {
 
-            creerunrepertoir(np.projectName)
-                //-------Chargement de la fonctionnalité
+            try {
+                fs.mkdirSync(np.projectName)
+            } catch (err) {
+                if (err.code === 'ENOENT') {
+                    console.log('file or directory does not exist');
+                }
+            }
+            //-------Chargement de la fonctionnalité
             exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/PdfGenerator', {
                 cwd: './' + np.projectName
             })
             exec('svn export https://github.com/morseck00/PROTO_BOX/trunk/server.js', {
                 cwd: './' + np.projectName
             });
-
-            //animation chargement 
-            var contentLength = 128 * 1024;
-            var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
-                complete: '=',
-                incomplete: ' ',
-                width: 30,
-                total: contentLength
-            });
-
-            (function next() {
-                if (contentLength) {
-                    var chunk = Math.random() * 10 * 1024;
-                    bar.tick(chunk);
-
-                    if (!bar.complete) {
-                        setTimeout(next, Math.random() * 1000);
-                    }
-                }
-            })();
             replace({
                 regex: '//pdfGenerator',
                 replacement: "",
@@ -520,4 +442,23 @@ function creerunfichier(fichier, data) {
             });
         }
     }
+
+    //animation chargement
+    var contentLength = 128 * 1024;
+    var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
+        complete: '=',
+        incomplete: '',
+        width: 50,
+        total: contentLength
+    });
+
+    (function next() {
+        if (contentLength) {
+            var chunk = Math.random() * 10 * 1024;
+            bar.tick(chunk);
+            if (!bar.complete) {
+                setTimeout(next, Math.random() * 1000);
+            }
+        }
+    })();
 })()

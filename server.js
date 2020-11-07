@@ -25,7 +25,6 @@ const bodyParser = require('body-parser');
 //sendmail app.use(express.json());
 //sendmail app.use(routesEmail);
 
-
 //CrudSer const routesCrud = require('./CRUD/routes/routefile')
 //CrudSer require('./db/mongoose');
 //CrudSer app.use(express.json())
@@ -35,5 +34,5 @@ const bodyParser = require('body-parser');
 //CrudSer app.use('/cruds', routesCrud)
 
 app.listen(config.PORT, () => {
-    console.log(`[OK] Server listening on 👍 ${config.URL}:${config.PORT}/`);
+    console.log(`** Proto-Box Live Development Server is listening on 👍 ${config.URL}:${config.PORT}/**`);
 })

@@ -6,10 +6,10 @@ pdfMake.vfs = vfsFonts.pdfMake.vfs;
 
 router.post('/pdf', (req, res, next) => {
     //res.send('PDF');
-    const content = req.body.content;
+    const contents = req.body.content;
     var documentDefinition = {
         content: [
-            `${content}`
+            `LOrem upsum`
         ]
     };
     const pdfDoc = pdfMake.createPdf(documentDefinition);
