@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({
 
 async function getLine(req, res, next) {
     try {
-        crud = await Crud.findById(req.params.id)
+        let crud = await Crud.findById(req.params.id)
         if (crud == null) {
             return res.status(404).json({ message: 'Cant find subscriber' })
         }
