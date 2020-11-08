@@ -5,7 +5,6 @@ const { ObjectID } = require('mongodb')
 const authenticate = require('../middleware/auth')
 const proprietes = require('./propriety')
 
-
 //Route pour s'incrire
 router.post('/register', async(req, res) => {
     const user = new User(req.body);

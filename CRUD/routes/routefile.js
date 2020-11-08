@@ -63,13 +63,16 @@ if (!ObjectID.isValid(_id)) {
     return res.status(404).send();
 }
 
-try {
-    updates.forEach((update) => req.crud[update] = req.body[update])
-    await req.crud.save()
-    res.send(req.Crud);
-} catch (error) {
-    res.status(400).send()
-}
+(async() => {
+    try {
+        updates.forEach((update) => req.crud[update] = req.body[update])
+        await req.crud.save()
+        res.send(req.Crud);
+    } catch (error) {
+        res.status(400).send()
+    }
+
+})()
 // router.patch('/:id', getLine, async(req, res) => {
 //     const updates = Object.keys(req.body)
 //     const allowedUpdates = proprietes.propriety.tab;
