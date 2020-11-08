@@ -50,7 +50,7 @@ router.get('/getOne/:id', getLine, (req, res) => {
 })
 
 // Update one subscriber
-router.patch('/:id', getLine, async(req, res) => {
+router.patch('update/:id', async(req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = proprietes.propriety.tab;
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
