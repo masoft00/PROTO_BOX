@@ -355,6 +355,7 @@ function creerunfichier(fichier, data) {
                 const au = await inquirer.prompt(attributeunique)
                 const ad2 = await inquirer.prompt(attributeadd)
 
+                let data = '\n' + an.attributename_name + ': { type: ' + at.type + ',required: ' + re.require + ', unique: ' + au.unique + '},\n'
 
                 creerunfichier('./' + np.projectName + '/CRUD/models/data.js', data)
 
