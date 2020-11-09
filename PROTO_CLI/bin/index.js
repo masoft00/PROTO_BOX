@@ -345,7 +345,7 @@ function creerunfichier(fichier, data) {
             //-------bracket pour commencé le fichier yml
 
             let ouverture = ""
-            creerunfichier('./' + np.projectName + '/CRUD/routes/propriety.js', ouverture)
+
             creerunfichier('./' + np.projectName + '/CRUD/models/data.js', ouverture)
 
             while (rep == 'O') {
@@ -355,10 +355,6 @@ function creerunfichier(fichier, data) {
                 const au = await inquirer.prompt(attributeunique)
                 const ad2 = await inquirer.prompt(attributeadd)
 
-                let datapropriety = "'" + an.attributename_name + "',"
-                creerunfichier('./' + np.projectName + '/CRUD/routes/propriety.js', datapropriety)
-
-                let data = '\n' + an.attributename_name + ': { type: ' + at.type + ',required: ' + re.require + ', unique: ' + au.unique + '},\n'
 
                 creerunfichier('./' + np.projectName + '/CRUD/models/data.js', data)
 

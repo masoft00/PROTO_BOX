@@ -25,13 +25,18 @@ const bodyParser = require('body-parser');
 //sendmail app.use(express.json());
 //sendmail app.use(routesEmail);
 
-//CrudSer const routesCrud = require('./CRUD/routes/routefile')
+
+//CrudSer  const path = require('path');
 //CrudSer require('./db/mongoose');
-//CrudSer app.use(express.json())
+//CrudSer const crudRoute = require('./CRUD/routes/employee.route')
+//CrudSer app.use(bodyParser.json());
 //CrudSer app.use(bodyParser.urlencoded({
-//CrudSer     extended: true
+//CrudSer    extended: false
 //CrudSer }));
-//CrudSer app.use('/cruds', routesCrud)
+//CrudSer app.use(cors());
+//CrudSer app.use(express.static(path.join(__dirname, 'dist/crud-app')));
+//CrudSer app.use('/', express.static(path.join(__dirname, 'dist/crud-app')));
+//CrudSer app.use('/api', crudRoute)
 
 app.listen(config.PORT, () => {
     console.log(`** Proto-Box Live Development Server is listening on 👍 ${config.URL}:${config.PORT}/**`);
