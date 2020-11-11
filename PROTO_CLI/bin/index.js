@@ -342,8 +342,6 @@ function creerunfichier(fichier, data) {
             const ad = await inquirer.prompt(attributeadd)
             const rep = ad.attributeaddname
 
-            //-------bracket pour commencé le fichier yml
-
             let ouverture = ""
 
             creerunfichier('./' + np.projectName + '/CRUD/models/data.js', ouverture)
@@ -403,14 +401,12 @@ function creerunfichier(fichier, data) {
                 silent: true
             });
 
-
             exec('npm install ', {
                 cwd: './' + np.projectName
             });
         }
 
         if (f.fonctionnalites[i] == "Pdf Generator") {
-
             try {
                 fs.mkdirSync(np.projectName)
             } catch (err) {
