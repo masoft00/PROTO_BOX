@@ -13,6 +13,7 @@ const { async } = require('replace/bin/shared-options')
 const { assert } = require('console')
 const validate = require('./validate')
 const cliProgress = require('cli-progress');
+const { fonts } = require('figlet')
 
 
 
@@ -82,21 +83,6 @@ const nomEntite = {
     }
 }
 
-//questions sur les propriétes
-const ProjectFront = {
-    type: 'input',
-    name: 'FrontName',
-    message: 'Voullez-vous générer la partie Front ?',
-    default: 'ProtoBoxFront',
-    validate: input => {
-        return new Promise((resolve, reject) => {
-            if (!input.length) {
-                reject('Voullez-vous générer la partie Front')
-            }
-            resolve(true)
-        })
-    }
-}
 
 //Question pour voir si l'utilisateur a besion de= front
 const frontadd = {
@@ -174,6 +160,9 @@ function creerunfichier(fichier, data) {
 (async() => {
     enteteproject()
     const np = await inquirer.prompt(nameproject)
+    const front = await inquirer.prompt(frontadd)
+    const rep1 = front.frontaddQ
+
     const f = await inquirer.prompt(fonctionnalites)
 
     for (let i = 0; i < f.fonctionnalites.length; i++) {
@@ -185,6 +174,12 @@ function creerunfichier(fichier, data) {
                 console.log('file or directory does not exist');
             }
         }
+        if (rep1 == 'O') {
+            exec('svn checkout https://github.com/morseck00/PROTOBOXFRONT/trunk/FRONT', {
+                cwd: './' + np.projectName
+            })
+        }
+
 
         exec('svn checkout https://github.com/morseck00/PROTO_BOX/trunk/config', {
             cwd: './' + np.projectName
@@ -434,6 +429,10 @@ function creerunfichier(fichier, data) {
                 cwd: './' + np.projectName
             });
         }
+
+        exec('npm install ', {
+            cwd: './' + np.projectName + '/FRONT'
+        });
     }
 
     //animation chargement
